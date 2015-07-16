@@ -25,7 +25,10 @@ libraryDependencies ++= {
     "com.gettyimages"     %%  "spray-swagger"  % "0.5.0",
     "org.webjars"          %  "swagger-ui"     % "2.0.12",
     "com.github.t3hnar"   %%  "scala-bcrypt"   % "2.4",
-    "org.mindrot"          %  "jbcrypt"        % "0.3m"
+    "org.mindrot"          %  "jbcrypt"        % "0.3m",
+    "joda-time"            % "joda-time" % "2.7",
+    "org.joda"             % "joda-convert" % "1.7",
+    "com.github.tototoshi" %% "slick-joda-mapper" % "2.0.0"
   )
 }
 
