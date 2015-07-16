@@ -28,13 +28,19 @@ trait UserDaoSlickImpl extends UserDao {
 
     def email: Rep[String] = column[String]("email")
 
-    def name: Rep[String] = column[String]("name")
+    def firstName: Rep[Option[String]] = column[Option[String]]("first_name")
 
-    def surname: Rep[String] = column[String]("surname")
+    def lastName: Rep[Option[String]] = column[Option[String]]("last_name")
+
+    def twitterId: Rep[Option[String]] = column[Option[String]]("twitter_id")
+
+    def linkedinId: Rep[Option[String]] = column[Option[String]]("linkedin_id")
+
+    def bio: Rep[Option[String]] = column[Option[String]]("bio")
 
     def passwordId: Rep[Option[Int]] = column[Option[Int]]("password_id")
 
-    def * = (id, email, name.?, surname.?, passwordId) <>((User.apply _).tupled, User.unapply)
+    def * = (id, email, firstName, lastName, twitterId, linkedinId, bio, passwordId) <>((User.apply _).tupled, User.unapply)
   }
 
   val users = TableQuery[Users]
