@@ -3,6 +3,7 @@ package router
 import model.User
 import org.specs2.mock._
 import org.specs2.mutable.Specification
+import router.dto.UserDto
 import service.UserService
 import spray.http.{ StatusCodes, BasicHttpCredentials }
 import spray.httpx.SprayJsonSupport._

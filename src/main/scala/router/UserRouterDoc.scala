@@ -16,10 +16,10 @@ trait UserRouterDoc {
       new ApiResponse(code = 200, message = "Ok"),
       new ApiResponse(code = 404, message = "User not found")
     ))
-    def readRoute: Route
+    def readRouteUser: Route
 
     @ApiOperation(value = "Get all the users", httpMethod = "GET", response = classOf[List[User]])
-    def readAllRoute: Route
+    def readAllRouteUser: Route
 
     @ApiOperation(value = "Delete a user by id", httpMethod = "DELETE", response = classOf[Int])
     @ApiImplicitParams(Array(
@@ -29,17 +29,17 @@ trait UserRouterDoc {
       new ApiResponse(code = 404, message = "User not found"),
       new ApiResponse(code = 400, message = "Invalid ID supplied")
     ))
-    def deleteRoute: Route
+    def deleteRouteUser: Route
 
 
     @ApiOperation(value = "Add a new user to the system", httpMethod = "POST", consumes="application/json")
     @ApiImplicitParams(Array(
-      new ApiImplicitParam(name = "body", value="User object to be added", required = true, dataType = "router.UserDto", paramType = "body" )
+      new ApiImplicitParam(name = "body", value="User object to be added", required = true, dataType = "router.dto.UserDto", paramType = "body" )
     ))
     @ApiResponses(Array(
       new ApiResponse(code = 405, message = "Invalid user"),
       new ApiResponse(code = 201, message = "Entity Created")
     ))
-    def postRoute: Route
+    def postRouteUser: Route
 
 }

@@ -1,5 +1,6 @@
 package router
 
+import router.dto.UserDto
 import service.UserService
 import spray.http.MediaTypes._
 import spray.http.StatusCodes._
@@ -15,9 +16,9 @@ trait UserRouter extends HttpService with UserRouterDoc {
 
   val userService: UserService
 
-  val userOperations: Route = postRoute ~ readRoute ~ readAllRoute ~ deleteRoute
+  val userOperations: Route = postRouteUser ~ readRouteUser ~ readAllRouteUser ~ deleteRouteUser
 
-  override def readRoute = path("users" / IntNumber) { userId =>
+  override def readRouteUser = path("users" / IntNumber) { userId =>
       get {
         authenticate(basicUserAuthenticator) { authInfo =>
           respondWithMediaType(`application/json`) {
@@ -31,7 +32,7 @@ trait UserRouter extends HttpService with UserRouterDoc {
       }
     }
 
-  override def readAllRoute = path("users") {
+  override def readAllRouteUser = path("users") {
       get {
         authenticate(basicUserAuthenticator) { authInfo =>
           respondWithMediaType(`application/json`) {
@@ -44,7 +45,7 @@ trait UserRouter extends HttpService with UserRouterDoc {
       }
     }
 
-  override def deleteRoute = path("users" / IntNumber) { userId =>
+  override def deleteRouteUser = path("users" / IntNumber) { userId =>
       delete {
         authenticate(basicUserAuthenticator) { authInfo =>
           respondWithMediaType(`application/json`) {
@@ -57,7 +58,7 @@ trait UserRouter extends HttpService with UserRouterDoc {
       }
     }
 
-  override def postRoute: Route = path("users") {
+  override def postRouteUser: Route = path("users") {
       post {
         authenticate(basicUserAuthenticator) { authInfo =>
           entity(as[UserDto]) { user =>

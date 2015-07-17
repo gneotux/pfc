@@ -2,7 +2,7 @@ package service
 
 import dao.{ PasswordDao, UserDao }
 import model.{ User, UserPassword }
-import router.UserDto
+import router.dto.UserDto
 import utils.DatabaseConfig._
 
 import scala.concurrent.ExecutionContext.Implicits.global

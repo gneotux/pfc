@@ -1,4 +1,5 @@
 package router
+package dto
 
 import com.wordnik.swagger.annotations.{ ApiModel, ApiModelProperty }
 import spray.json.DefaultJsonProtocol
