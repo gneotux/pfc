@@ -19,7 +19,7 @@ trait EventDao {
 
   def get(id: Int): DBIO[Option[Event]]
 
-  def add(user: Event): DBIO[Int]
+  def add(event: Event): DBIO[Int]
 
   def delete(id: Int): DBIO[Int]
 }
