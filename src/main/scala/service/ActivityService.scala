@@ -1,12 +1,15 @@
 package service
 
-import dao.{ LocationDao, EventDao, PasswordDao, ActivityDao }
-import model.{ UserPassword, Activity }
+import java.util.NoSuchElementException
+
+import dao._
+import model._
 import router.dto.ActivityDto
 import utils.DatabaseConfig._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.control.Exception
 
 /**
  * Created by gneotux on 17/07/15.
@@ -14,10 +17,22 @@ import scala.concurrent.Future
 trait ActivityService {
 
   def activityDao: ActivityDao
+  def atendeeDao: AtendeeDao
+  def speakerDao: SpeakerDao
+  def userDao: UserDao
+
 
   def add(activity: ActivityDto): Future[Option[Activity]]
 
+  def addAtendee(activityId: Int, userId: Int): Future[Option[Atendee]]
+
+  def addSpeaker(activityId: Int, userId: Int): Future[Option[Speaker]]
+
   def getAll(): Future[Seq[Activity]]
+
+  def getAllAtendees(activityId: Int): Future[Seq[User]]
+
+  def getAllSpeakers(activityId: Int): Future[Seq[User]]
 
   def get(id: Int): Future[Option[Activity]]
 
@@ -41,6 +56,10 @@ trait ActivityService {
 object ActivityService extends ActivityService {
 
   override val activityDao = ActivityDao
+  override val atendeeDao = AtendeeDao
+  override val speakerDao = SpeakerDao
+  override val userDao = UserDao
+
 
   override def add(activity: ActivityDto): Future[Option[Activity]] = db.run {
     for {
@@ -49,8 +68,38 @@ object ActivityService extends ActivityService {
     } yield activity
   }
 
+  override def addAtendee(activityId: Int, userId: Int): Future[Option[Atendee]] = db.run {
+    for {
+      activity <- activityDao.get(activityId)
+//      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
+      user <- userDao.get(userId)
+//      _ = if (user.isEmpty) throw new NoSuchElementException(s"Atendee with userId: ${userId} not found")
+      attendeeId <- atendeeDao.add(Atendee(0,userId,activityId))
+      atendee <- atendeeDao.get(attendeeId)
+    } yield atendee
+  }
+
+  override def addSpeaker(activityId: Int, userId: Int): Future[Option[Speaker]] = db.run {
+    for {
+      activity <- activityDao.get(activityId)
+//      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
+      user <- userDao.get(userId)
+//      _ = if (user.isEmpty) throw new NoSuchElementException(s"Speaker with userId: ${userId} not found")
+      attendeeId <- speakerDao.add(Speaker(0,userId,activityId))
+      speaker <- speakerDao.get(attendeeId)
+    } yield speaker
+  }
+
   override def getAll(): Future[Seq[Activity]] = db.run {
     activityDao.getAll
+  }
+
+  override def getAllAtendees(activityId: Int): Future[Seq[User]] = db.run{
+    atendeeDao.getUsersByActivityId(activityId)
+  }
+
+  override def getAllSpeakers(activityId: Int): Future[Seq[User]] = db.run{
+    speakerDao.getUsersByActivityId(activityId)
   }
 
   override def get(id: Int): Future[Option[Activity]] = db.run {
