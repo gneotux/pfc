@@ -3,26 +3,45 @@ package router
 import akka.actor.{ Actor, ActorLogging }
 import com.gettyimages.spray.swagger.SwaggerHttpService
 import com.wordnik.swagger.model.ApiInfo
-import service.{ EventService, ActivityService, UserService }
+import service.{ LocationService, EventService, ActivityService, UserService }
 
 import scala.reflect.runtime.universe._
 
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
-class ApiRouterActor(userServ: UserService, activityServ: ActivityService, eventServ: EventService ) extends Actor with UserRouter with ActivityRouter with EventRouter with ActorLogging with Authenticator {
+class ApiRouterActor(
+  userServ: UserService,
+  activityServ: ActivityService,
+  eventServ: EventService,
+  locationServ: LocationService
+) extends Actor
+  with UserRouter
+  with ActivityRouter
+  with EventRouter
+  with LocationRouter
+  with ActorLogging
+  with Authenticator
+{
 
   override val userService = userServ
   override val activityService = activityServ
   override val eventService = eventServ
+  override val locationService = locationServ
 
   val swaggerService = new SwaggerHttpService {
-    override def apiTypes = Seq(typeOf[UserRouterDoc], typeOf[ActivityRouterDoc], typeOf[EventRouterDoc])
+    override def apiTypes =
+      Seq(
+        typeOf[UserRouterDoc],
+        typeOf[ActivityRouterDoc],
+        typeOf[EventRouterDoc],
+        typeOf[LocationRouterDoc]
+      )
     override def apiVersion = "0.1"
     override def baseUrl = "/" // let swagger-ui determine the host and port
     override def docsPath = "api-docs"
     override def actorRefFactory = context
-    override def apiInfo = Some(new ApiInfo("Api users", "", "", "", "", ""))
+    override def apiInfo = Some(new ApiInfo("Api Events Manager", "", "", "", "", ""))
   }
 
   // the HttpService trait defines only one abstract member, which
@@ -34,8 +53,9 @@ class ApiRouterActor(userServ: UserService, activityServ: ActivityService, event
   // or timeout handling
   def receive = runRoute(
     userOperations ~
-      activityOperations ~
-      eventOperations ~
+    activityOperations ~
+    eventOperations ~
+    locationOperations ~
     swaggerService.routes ~
     get {
       pathPrefix("") { pathEndOrSingleSlash {
