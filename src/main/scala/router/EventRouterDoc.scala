@@ -36,7 +36,7 @@ trait EventRouterDoc {
 
   @ApiOperation(value = "Add a new event to the system", httpMethod = "POST", consumes="application/json")
   @ApiImplicitParams(Array(
-    new ApiImplicitParam(name = "body", value="Event object to be added", required = true, dataType = "router.EventDto", paramType = "body" )
+    new ApiImplicitParam(name = "body", value="Event object to be added", required = true, dataType = "router.dto.EventDto", paramType = "body" )
   ))
   @ApiResponses(Array(
     new ApiResponse(code = 405, message = "Invalid event"),

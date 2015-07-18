@@ -36,7 +36,7 @@ trait ActivityRouterDoc {
 
   @ApiOperation(value = "Add a new activity to the system", httpMethod = "POST", consumes="application/json")
   @ApiImplicitParams(Array(
-    new ApiImplicitParam(name = "body", value="Activity object to be added", required = true, dataType = "router.ActivityDto", paramType = "body" )
+    new ApiImplicitParam(name = "body", value="Activity object to be added", required = true, dataType = "router.dto.ActivityDto", paramType = "body" )
   ))
   @ApiResponses(Array(
     new ApiResponse(code = 405, message = "Invalid activity"),
