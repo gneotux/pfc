@@ -1,9 +1,90 @@
 create table "users"
 ("id" SERIAL NOT NULL PRIMARY KEY,
 "email" VARCHAR(254) NOT NULL,
-"name" VARCHAR(254),
-"surname" VARCHAR(254),
+"first_name" VARCHAR(254),
+"last_name" VARCHAR(254),
+"twitter_id" VARCHAR(254),
+"linkedin_id" VARCHAR(254),
+"bio" VARCHAR(254),
 "password_id" integer
+);
+
+create table "activities"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"event_id" integer NOT NULL,
+"location_id" integer NOT NULL,
+"activity_type_id" integer NOT NULL,
+"title" VARCHAR(254),
+"description" VARCHAR(254),
+"objective" VARCHAR(254),
+"start_time" timestamp without time zone NOT NULL,
+"end_time" timestamp without time zone NOT NULL,
+"resources" VARCHAR(254)
+);
+
+create table "events"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"name" VARCHAR(254) NOT NULL,
+"description" VARCHAR(254),
+"website" VARCHAR(254),
+"twitter_hashtag" VARCHAR(254),
+"logo_url" VARCHAR(254)
+);
+
+create table "locations"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"name" VARCHAR(254) NOT NULL,
+"code" VARCHAR(254),
+"latitude" double precision NOT NULL,
+"longitude" double precision NOT NULL,
+"capacity" integer,
+"description" VARCHAR(254),
+"photo_url" VARCHAR(254)
+);
+
+create table "atendees"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"activity_id" integer NOT NULL,
+"user_id" integer NOT NULL
+);
+
+create table "speakers"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"activity_id" integer NOT NULL,
+"user_id" integer NOT NULL
+);
+
+create table "activityTags"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"tag_id" integer NOT NULL,
+"activity_id" integer NOT NULL
+);
+
+create table "activityTypes"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"name" VARCHAR(254) NOT NULL
+);
+
+create table "companies"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"email" VARCHAR(254) NOT NULL,
+"phone" VARCHAR(254) NOT NULL,
+"description" VARCHAR(254),
+"website" VARCHAR(254),
+"logo_url" VARCHAR(254)
+);
+
+create table "tags"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"name" VARCHAR(254) NOt NULL,
+"color" VARCHAR(254),
+"short_name" VARCHAR(254)
+);
+
+create table "sponsors"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"company_id" integer NOT NULL,
+"event_id" integer NOT NULL
 );
 
 create table "passwords"
