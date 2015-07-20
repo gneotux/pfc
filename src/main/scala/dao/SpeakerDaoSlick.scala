@@ -20,6 +20,8 @@ trait SpeakerDao {
   def add(user: Speaker): DBIO[Int]
 
   def delete(id: Int): DBIO[Int]
+
+  def deleteByUserAndActivityId(activityId: Int, userId: Int): DBIO[Int]
 }
 
 trait SpeakerDaoSlickImpl extends SpeakerDao {
@@ -54,6 +56,11 @@ trait SpeakerDaoSlickImpl extends SpeakerDao {
   }
 
   override def delete(id: Int): DBIO[Int] = speakers.filter(_.id === id).delete
+
+  override def deleteByUserAndActivityId(activityId: Int, userId: Int): DBIO[Int] = {
+    speakers.filter(speaker => speaker.userId === userId && speaker.activityId === activityId).delete
+  }
+
 }
 
 object SpeakerDao extends SpeakerDaoSlickImpl

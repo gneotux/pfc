@@ -20,6 +20,10 @@ trait AtendeeDao {
   def add(user: Atendee): DBIO[Int]
 
   def delete(id: Int): DBIO[Int]
+
+  def deleteByUserAndActivityId(activityId: Int, userId: Int): DBIO[Int]
+
+
 }
 
 trait AtendeeDaoSlickImpl extends AtendeeDao {
@@ -55,6 +59,11 @@ trait AtendeeDaoSlickImpl extends AtendeeDao {
   }
 
   override def delete(id: Int): DBIO[Int] = atendees.filter(_.id === id).delete
+
+  override def deleteByUserAndActivityId(activityId: Int, userId: Int): DBIO[Int] = {
+    atendees.filter(atendee => atendee.userId === userId && atendee.activityId === activityId).delete
+  }
+
 }
 
 object AtendeeDao extends AtendeeDaoSlickImpl
