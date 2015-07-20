@@ -27,8 +27,8 @@ case class UserDto(
   @(ApiModelProperty @field)(value = "user's bio")
   bio: Option[String] = None,
 
-  @(ApiModelProperty @field)(required = true, value = "user permission id")
-  permissionId: Int,
+  @(ApiModelProperty @field)(required = true, value = "user permission")
+  permission: String,
 
   @(ApiModelProperty @field)(required = true, value = "password of the user")
   password: String )

@@ -38,6 +38,8 @@ trait UserDaoSlickImpl extends UserDao {
 
     def bio: Rep[Option[String]] = column[Option[String]]("bio")
 
+    def permission: Rep[String] = column[String]("permission")
+
     def passwordId: Rep[Option[Int]] = column[Option[Int]]("password_id")
 
     def * = (id, email, firstName, lastName, twitterId, linkedinId, bio, passwordId) <>((User.apply _).tupled, User.unapply)

@@ -25,7 +25,17 @@ trait UserService {
 
   def delete(id: Int):Future[Int]
 
-  def populateUser: UserDto => User = (userDto: UserDto) => User(0, userDto.email, userDto.name, userDto.surname)
+  def populateUser: UserDto => User = (userDto: UserDto) =>
+    User(
+      0,
+      userDto.email,
+      userDto.firstName,
+      userDto.lastName,
+      userDto.twitterId,
+      userDto.linkedinId,
+      userDto.bio,
+      userDto.permission
+    )
 }
 
 object UserService extends UserService {
