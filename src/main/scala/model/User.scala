@@ -29,9 +29,12 @@ case class User(
   @(ApiModelProperty @field)(value = "user's bio")
   bio: Option[String] = None,
 
+  @(ApiModelProperty @field)(value = "user permission")
+  permission: String,
+
   @(ApiModelProperty @field)(hidden = true)
   passwordId: Option[Int] = None
 )
 object User extends DefaultJsonProtocol{
-  implicit val userFormat = jsonFormat8(User.apply)
+  implicit val userFormat = jsonFormat9(User.apply)
 }
