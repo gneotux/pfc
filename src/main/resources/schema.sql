@@ -98,5 +98,9 @@ id, hashed_password, salt)
 VALUES (1,'$2a$10$U3gBQ50FY5qiQ5XeQKgWwO6AADKjaGqh/6l3RzWitAWelWCQxffUC', '$2a$10$U3gBQ50FY5qiQ5XeQKgWwO');
 
 INSERT INTO users(
-id, email, name, surname, password_id)
-VALUES (1, 'test1@test.com', '', '', 1);
+id, email, first_name, last_name, twitter_id, linkedin_id, bio,  password_id)
+VALUES (1, 'giancarlo@pfc.com', 'Giancarlo', 'Munoz', 'gneotux', 'giancarlo_munoz', 'Im just a developer...',1);
+
+INSERT INTO activities(
+id, event_id, location_id, activity_type_id, title, description, objective, start_time, end_time, resources
+) VALUES (1, 1, 1, 1, 'Test activity', 'This is a test for the events API', 'Create new apis', TIMESTAMP '2015-07-16 15:00:00', TIMESTAMP '2015-07-19 21:00:00', 'github/gneotux');
