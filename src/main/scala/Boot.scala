@@ -3,7 +3,7 @@ import akka.io.IO
 import akka.pattern.ask
 import akka.util.Timeout
 import router.ApiRouterActor
-import service.{ LocationService, EventService, ActivityService, UserService }
+import service._
 import spray.can.Http
 import utils.Config._
 
@@ -22,7 +22,10 @@ object Boot extends App {
       UserService,
       ActivityService,
       EventService,
-      LocationService
+      LocationService,
+      CompanyService,
+      TagService,
+      EventDayService
     ), app.userServiceName)
 
   implicit val timeout = Timeout(5.seconds)

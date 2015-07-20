@@ -3,7 +3,7 @@ package router
 import akka.actor.{ Actor, ActorLogging }
 import com.gettyimages.spray.swagger.SwaggerHttpService
 import com.wordnik.swagger.model.ApiInfo
-import service.{ LocationService, EventService, ActivityService, UserService }
+import service._
 
 import scala.reflect.runtime.universe._
 
@@ -14,12 +14,18 @@ class ApiRouterActor(
   userServ: UserService,
   activityServ: ActivityService,
   eventServ: EventService,
-  locationServ: LocationService
+  locationServ: LocationService,
+  companyServ: CompanyService,
+  tagServ: TagService,
+  eventDayServ: EventDayService
 ) extends Actor
   with UserRouter
   with ActivityRouter
   with EventRouter
   with LocationRouter
+  with CompanyRouter
+  with TagRouter
+  with EventDayRouter
   with ActorLogging
   with Authenticator
 {
@@ -28,6 +34,9 @@ class ApiRouterActor(
   override val activityService = activityServ
   override val eventService = eventServ
   override val locationService = locationServ
+  override val companyService = companyServ
+  override val tagService = tagServ
+  override val eventDayService = eventDayServ
 
   val swaggerService = new SwaggerHttpService {
     override def apiTypes =
@@ -35,7 +44,10 @@ class ApiRouterActor(
         typeOf[UserRouterDoc],
         typeOf[ActivityRouterDoc],
         typeOf[EventRouterDoc],
-        typeOf[LocationRouterDoc]
+        typeOf[LocationRouterDoc],
+        typeOf[CompanyRouterDoc],
+        typeOf[TagRouterDoc],
+        typeOf[EventDayRouterDoc]
       )
     override def apiVersion = "0.1"
     override def baseUrl = "/" // let swagger-ui determine the host and port
@@ -56,6 +68,9 @@ class ApiRouterActor(
     activityOperations ~
     eventOperations ~
     locationOperations ~
+    companyOperations ~
+    tagOperations ~
+    eventDayOperations ~
     swaggerService.routes ~
     get {
       pathPrefix("") { pathEndOrSingleSlash {
