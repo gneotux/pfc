@@ -76,10 +76,12 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
   override def deleteRouteActivity = path("activities" / IntNumber) { activityId =>
     delete {
       authenticate(basicUserAuthenticator) { authInfo =>
-        respondWithMediaType(`application/json`) {
-          onComplete(activityService.delete(activityId)) {
-            case Success(ok) => complete(OK)
-            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.delete(activityId)) {
+              case Success(activityId: Int) => complete(OK, activityId.toString)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
           }
         }
       }
@@ -89,12 +91,14 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
   override def postRouteActivity: Route = path("activities") {
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
-        entity(as[ActivityDto]) { activity =>
-          respondWithMediaType(`application/json`) {
-            onComplete(activityService.add(activity)) {
-              case Success(Some(newActivity)) => complete(Created, newActivity)
-              case Success(None) => complete(NotAcceptable, "Invalid activity")
-              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[ActivityDto]) { activity =>
+            respondWithMediaType(`application/json`) {
+              onComplete(activityService.add(activity)) {
+                case Success(Some(newActivity)) => complete(Created, newActivity)
+                case Success(None) => complete(NotAcceptable, "Invalid activity")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }
@@ -105,10 +109,12 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
   def postRouteActivityAtendee: Route = path("activities" / IntNumber / "atendees" / IntNumber) { (activityId, userId) =>
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
-        respondWithMediaType(`application/json`) {
-          onComplete(activityService.addAtendee(activityId, userId)) {
-            case Success(atendee) => complete(atendee)
-            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.addAtendee(activityId, userId)) {
+              case Success(atendee) => complete(atendee)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
           }
         }
       }
@@ -118,10 +124,42 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
   def postRouteActivitySpeaker: Route = path("activities" / IntNumber / "speakers"/ IntNumber) { (activityId, userId) =>
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
-        respondWithMediaType(`application/json`) {
-          onComplete(activityService.addSpeaker(activityId, userId)) {
-            case Success(speaker) => complete(speaker)
-            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.addSpeaker(activityId, userId)) {
+              case Success(speaker) => complete(speaker)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  def deleteRouteActivityAtendee: Route = path("activities" / IntNumber / "atendees" / IntNumber) { (activityId, userId) =>
+    delete {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.deleteAtendee(activityId, userId)) {
+              case Success(atendeeId: Int) => complete(OK, atendeeId.toString)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  def deleteRouteActivitySpeaker: Route = path("activities" / IntNumber / "speakers"/ IntNumber) { (activityId, userId) =>
+    delete {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.deleteSpeaker(activityId, userId)) {
+              case Success(speakerId: Int) => complete(OK, speakerId.toString)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
           }
         }
       }

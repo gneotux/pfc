@@ -50,10 +50,12 @@ trait LocationRouter extends HttpService with LocationRouterDoc {
   override def deleteRouteLocation = path("locations" / IntNumber) { locationId =>
     delete {
       authenticate(basicUserAuthenticator) { authInfo =>
-        respondWithMediaType(`application/json`) {
-          onComplete(locationService.delete(locationId)) {
-            case Success(ok) => complete(OK)
-            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(locationService.delete(locationId)) {
+              case Success(ok) => complete(OK)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
           }
         }
       }
@@ -63,12 +65,14 @@ trait LocationRouter extends HttpService with LocationRouterDoc {
   override def postRouteLocation: Route = path("locations") {
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
-        entity(as[LocationDto]) { location =>
-          respondWithMediaType(`application/json`) {
-            onComplete(locationService.add(location)) {
-              case Success(Some(newLocation)) => complete(Created, newLocation)
-              case Success(None) => complete(NotAcceptable, "Invalid location")
-              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[LocationDto]) { location =>
+            respondWithMediaType(`application/json`) {
+              onComplete(locationService.add(location)) {
+                case Success(Some(newLocation)) => complete(Created, newLocation)
+                case Success(None) => complete(NotAcceptable, "Invalid location")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }

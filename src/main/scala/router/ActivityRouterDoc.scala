@@ -93,4 +93,28 @@ trait ActivityRouterDoc {
   ))
   def postRouteActivitySpeaker: Route
 
+  @ApiOperation(value = "Remove an atendee for the Activity", httpMethod = "DELETE", response = classOf[Int])
+  @Path("/{activityId}/speakers/{userId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "userId", value="ID of the user", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 404, message = "Entity not found"),
+    new ApiResponse(code = 400, message = "Invalid ID supplied")
+  ))
+  def deleteRouteActivityAtendee: Route
+
+  @ApiOperation(value = "Remove a speaker for the activity", httpMethod = "DELETE", response = classOf[Int])
+  @Path("/{activityId}/speakers/{userId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "userId", value="ID of the user", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 404, message = "Entity not found"),
+    new ApiResponse(code = 400, message = "Invalid ID supplied")
+  ))
+  def deleteRouteActivitySpeaker: Route
+
 }

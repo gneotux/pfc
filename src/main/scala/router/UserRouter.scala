@@ -48,10 +48,12 @@ trait UserRouter extends HttpService with UserRouterDoc {
   override def deleteRouteUser = path("users" / IntNumber) { userId =>
       delete {
         authenticate(basicUserAuthenticator) { authInfo =>
-          respondWithMediaType(`application/json`) {
-            onComplete(userService.delete(userId)) {
-              case Success(ok) => complete(OK)
-              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+          authorize(authInfo.hasPermissions("ADMIN")) {
+            respondWithMediaType(`application/json`) {
+              onComplete(userService.delete(userId)) {
+                case Success(ok) => complete(OK)
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }
@@ -61,12 +63,14 @@ trait UserRouter extends HttpService with UserRouterDoc {
   override def postRouteUser: Route = path("users") {
       post {
         authenticate(basicUserAuthenticator) { authInfo =>
-          entity(as[UserDto]) { user =>
-            respondWithMediaType(`application/json`) {
-              onComplete(userService.add(user)) {
-                case Success(Some(newUser)) => complete(Created, newUser)
-                case Success(None) => complete(NotAcceptable, "Invalid user")
-                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+          authorize(authInfo.hasPermissions("ADMIN")) {
+            entity(as[UserDto]) { user =>
+              respondWithMediaType(`application/json`) {
+                onComplete(userService.add(user)) {
+                  case Success(Some(newUser)) => complete(Created, newUser)
+                  case Success(None) => complete(NotAcceptable, "Invalid user")
+                  case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+                }
               }
             }
           }

@@ -50,10 +50,12 @@ trait EventRouter extends HttpService with EventRouterDoc {
   override def deleteRouteEvent = path("events" / IntNumber) { eventId =>
     delete {
       authenticate(basicUserAuthenticator) { authInfo =>
-        respondWithMediaType(`application/json`) {
-          onComplete(eventService.delete(eventId)) {
-            case Success(ok) => complete(OK)
-            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(eventService.delete(eventId)) {
+              case Success(ok) => complete(OK)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
           }
         }
       }
@@ -63,12 +65,14 @@ trait EventRouter extends HttpService with EventRouterDoc {
   override def postRouteEvent: Route = path("events") {
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
-        entity(as[EventDto]) { event =>
-          respondWithMediaType(`application/json`) {
-            onComplete(eventService.add(event)) {
-              case Success(Some(newEvent)) => complete(Created, newEvent)
-              case Success(None) => complete(NotAcceptable, "Invalid event")
-              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[EventDto]) { event =>
+            respondWithMediaType(`application/json`) {
+              onComplete(eventService.add(event)) {
+                case Success(Some(newEvent)) => complete(Created, newEvent)
+                case Success(None) => complete(NotAcceptable, "Invalid event")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }
