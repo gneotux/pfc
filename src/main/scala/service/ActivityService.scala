@@ -34,6 +34,10 @@ trait ActivityService {
 
   def getAllSpeakers(activityId: Int): Future[Seq[User]]
 
+  def deleteAtendee(activityId: Int, userId: Int): Future[Int]
+
+  def deleteSpeaker(activityId: Int, userId: Int): Future[Int]
+
   def get(id: Int): Future[Option[Activity]]
 
   def delete(id: Int): Future[Int]
@@ -90,6 +94,14 @@ object ActivityService extends ActivityService {
     } yield speaker
   }
 
+  override def deleteAtendee(activityId: Int, userId: Int): Future[Int] = db.run {
+    atendeeDao.deleteByUserAndActivityId(activityId, userId)
+  }
+
+  override def deleteSpeaker(activityId: Int, userId: Int): Future[Int] = db.run {
+    speakerDao.deleteByUserAndActivityId(activityId, userId)
+  }
+
   override def getAll(): Future[Seq[Activity]] = db.run {
     activityDao.getAll
   }
@@ -109,4 +121,5 @@ object ActivityService extends ActivityService {
   override def delete(id: Int): Future[Int] = db.run {
     activityDao.delete(id)
   }
+
 }
