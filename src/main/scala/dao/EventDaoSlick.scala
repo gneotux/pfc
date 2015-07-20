@@ -26,7 +26,7 @@ trait EventDao {
 
 trait EventDaoSlickImpl extends EventDao {
 
-  class Activities(tag: Tag) extends Table[Event](tag, "events") {
+  class Events(tag: Tag) extends Table[Event](tag, "events") {
 
     def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
@@ -43,7 +43,7 @@ trait EventDaoSlickImpl extends EventDao {
     def * = (id, name, description, website, twitterHashtag, logoUrl) <>((Event.apply _).tupled, Event.unapply)
   }
 
-  val events = TableQuery[Activities]
+  val events = TableQuery[Events]
 
   override def create = events.schema.create
 

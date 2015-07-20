@@ -11,7 +11,7 @@ import scala.annotation.meta.field
  */
 @ApiModel(description = "An EventDto entity")
 case class EventDto(
-  @(ApiModelProperty@field)(value = "event name")
+  @(ApiModelProperty@field)(required = true, value = "event name")
   name: String,
   
   @(ApiModelProperty@field)(value = "event's description")
