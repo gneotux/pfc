@@ -21,7 +21,7 @@ trait LocationDao {
 
 trait LocationDaoSlickImpl extends LocationDao {
 
-  class Activities(tag: Tag) extends Table[Location](tag, "locations") {
+  class Locations(tag: Tag) extends Table[Location](tag, "locations") {
 
     def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
@@ -33,7 +33,7 @@ trait LocationDaoSlickImpl extends LocationDao {
 
     def longitude: Rep[Double] =  column[Double]("longitude")
 
-    def capacity: Rep[Int] =  column[Int]("longitude")
+    def capacity: Rep[Int] =  column[Int]("capacity")
 
     def description: Rep[Option[String]] = column[Option[String]]("description")
 
@@ -42,7 +42,7 @@ trait LocationDaoSlickImpl extends LocationDao {
     def * = (id, name, code, latitude, longitude, capacity, description, photoUrl) <>((Location.apply _).tupled, Location.unapply)
   }
 
-  val locations = TableQuery[Activities]
+  val locations = TableQuery[Locations]
 
   override def create = locations.schema.create
 

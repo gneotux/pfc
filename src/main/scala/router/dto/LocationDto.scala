@@ -9,21 +9,21 @@ import scala.annotation.meta.field
 /**
  * Created by gneotux on 18/07/15.
  */
-@ApiModel(description = "A Location entity")
+@ApiModel(description = "A Location creation entity")
 case class LocationDto(
-  @(ApiModelProperty@field)(value = "location name")
+  @(ApiModelProperty@field)(required = true, value = "location name")
   name: String,
 
   @(ApiModelProperty@field)(value = "location's code")
   code: Option[String] = None,
 
-  @(ApiModelProperty @field)(value = "location's latitude")
+  @(ApiModelProperty @field)(required = true, value = "location's latitude")
   latitude: Double,
 
-  @(ApiModelProperty @field)(value = "location's longitude")
+  @(ApiModelProperty @field)(required = true, value = "location's longitude")
   longitude: Double,
 
-  @(ApiModelProperty @field)(value = "location's people capacity")
+  @(ApiModelProperty @field)(required = true, value = "location's people capacity")
   capacity: Int,
 
   @(ApiModelProperty@field)(value = "location's description")
