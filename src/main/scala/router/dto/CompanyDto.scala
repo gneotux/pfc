@@ -1,4 +1,4 @@
-package model
+package router.dto
 
 import com.wordnik.swagger.annotations.{ ApiModelProperty, ApiModel }
 import spray.json.DefaultJsonProtocol
@@ -8,12 +8,9 @@ import scala.annotation.meta.field
 /**
  * Created by gneotux on 16/07/15.
  */
-@ApiModel(description = "An Company entity")
-case class Company(
-  @(ApiModelProperty @field)(value = "unique identifier for the company")
-  id: Int,
-
-  @(ApiModelProperty @field)(value = "email for the contact of the company")
+@ApiModel(description = "An Company creation entity")
+case class CompanyDto(
+  @(ApiModelProperty @field)(required = true, value = "email for the contact of the company")
   email: String,
 
   @(ApiModelProperty @field)(value = "phone number for the contact of the company")
@@ -28,6 +25,6 @@ case class Company(
   @(ApiModelProperty@field)(value = "company's logo url")
   logoUrl: Option[String] = None
 )
-object Company extends DefaultJsonProtocol{
-  implicit val companyFormat = jsonFormat6(Company.apply)
+object CompanyDto extends DefaultJsonProtocol{
+  implicit val companyFormat = jsonFormat5(CompanyDto.apply)
 }
