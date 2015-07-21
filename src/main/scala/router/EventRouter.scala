@@ -80,4 +80,47 @@ trait EventRouter extends HttpService with EventRouterDoc {
     }
   }
 
+  override def readAllSponsorsInEvent = path("events" / IntNumber / "sponsors") { eventId =>
+    get {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        respondWithMediaType(`application/json`) {
+          onComplete(eventService.getAllSponsorsByEventId(eventId)) {
+            case Success(sponsors) => complete(sponsors)
+            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+          }
+        }
+      }
+    }
+  }
+
+  override def postRouteEventSponsor: Route = path("events" / IntNumber / "sponsor"/ IntNumber) { (eventId, companyId) =>
+    post {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(eventService.addSponsor(eventId, companyId)) {
+              case Success(sponsor) => complete(sponsor)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def deleteRouteEventSponsor: Route = path("events" / IntNumber / "sponsor" / IntNumber) { (eventId, companyId) =>
+    delete {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(eventService.deleteSponsor(eventId, companyId)) {
+              case Success(sponsorId: Int) => complete(OK, sponsorId.toString)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

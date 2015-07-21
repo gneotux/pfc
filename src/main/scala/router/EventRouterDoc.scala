@@ -1,7 +1,9 @@
 package router
 
+import javax.ws.rs.Path
+
 import com.wordnik.swagger.annotations._
-import model.Event
+import model.{ Company, Sponsor, Event }
 import spray.routing._
 
 /**
@@ -43,5 +45,40 @@ trait EventRouterDoc {
     new ApiResponse(code = 201, message = "Entity Created")
   ))
   def postRouteEvent: Route
+
+  @ApiOperation(value = "Get all the sponsors in a event by eventId", httpMethod = "GET", response = classOf[Company])
+  @Path("/{eventId}/sponsors")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "eventId", value="ID of the event", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 200, message = "Ok"),
+    new ApiResponse(code = 404, message = "Event not found")
+  ))
+  def readAllSponsorsInEvent: Route
+
+  @ApiOperation(value = "Add new sponsor for the event", httpMethod = "POST", response = classOf[Sponsor])
+  @Path("/{eventId}/sponsors/{companyId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "eventId", value="ID of the event", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "companyId", value="ID of the company", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid entity"),
+    new ApiResponse(code = 201, message = "Entity Created")
+  ))
+  def postRouteEventSponsor: Route
+
+  @ApiOperation(value = "Remove an sponsor for the event", httpMethod = "DELETE", response = classOf[Int])
+  @Path("/{eventId}/sponsors/{userId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "eventId", value="ID of the event", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "companyId", value="ID of the company", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 404, message = "Entity not found"),
+    new ApiResponse(code = 400, message = "Invalid ID supplied")
+  ))
+  def deleteRouteEventSponsor: Route
 
 }
