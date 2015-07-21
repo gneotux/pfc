@@ -48,8 +48,8 @@ trait SpeakerDaoSlickImpl extends SpeakerDao {
   override def getUsersByActivityId(activityId: Int): DBIO[Seq[User]] =
     (for {
       speaker <- speakers if speaker.activityId === activityId
-      user <- UserDao.users
-    } yield user).result
+      users <- UserDao.users if users.id === speaker.userId
+    } yield users).result
 
   override def add(speaker: Speaker): DBIO[Int] = {
     (speakers returning speakers.map(_.id)) += speaker
@@ -57,7 +57,7 @@ trait SpeakerDaoSlickImpl extends SpeakerDao {
 
   override def delete(id: Int): DBIO[Int] = speakers.filter(_.id === id).delete
 
-  override def deleteByUserAndActivityId(activityId: Int, userId: Int): DBIO[Int] = {
+  override def deleteByUserAndActivityId(userId: Int, activityId: Int): DBIO[Int] = {
     speakers.filter(speaker => speaker.userId === userId && speaker.activityId === activityId).delete
   }
 

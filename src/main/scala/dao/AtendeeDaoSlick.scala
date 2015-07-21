@@ -50,8 +50,8 @@ trait AtendeeDaoSlickImpl extends AtendeeDao {
   override def getUsersByActivityId(activityId: Int): DBIO[Seq[User]] =
     (for {
       atendee <- atendees if atendee.activityId === activityId
-      user <- UserDao.users
-    } yield user).result
+      users <- UserDao.users if users.id === atendee.userId
+    } yield users).result
 
 
   override def add(atendee: Atendee): DBIO[Int] = {
@@ -60,7 +60,7 @@ trait AtendeeDaoSlickImpl extends AtendeeDao {
 
   override def delete(id: Int): DBIO[Int] = atendees.filter(_.id === id).delete
 
-  override def deleteByUserAndActivityId(activityId: Int, userId: Int): DBIO[Int] = {
+  override def deleteByUserAndActivityId(userId: Int, activityId: Int): DBIO[Int] = {
     atendees.filter(atendee => atendee.userId === userId && atendee.activityId === activityId).delete
   }
 
