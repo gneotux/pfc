@@ -42,7 +42,7 @@ trait UserDaoSlickImpl extends UserDao {
 
     def passwordId: Rep[Option[Int]] = column[Option[Int]]("password_id")
 
-    def * = (id, email, firstName, lastName, twitterId, linkedinId, bio, passwordId) <>((User.apply _).tupled, User.unapply)
+    def * = (id, email, firstName, lastName, twitterId, linkedinId, bio, permission, passwordId) <>((User.apply _).tupled, User.unapply)
   }
 
   val users = TableQuery[Users]
