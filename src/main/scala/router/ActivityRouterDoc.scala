@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation
 
 import javax.ws.rs.Path
 import com.wordnik.swagger.annotations._
-import model.{ Speaker, Atendee, User, Activity }
+import model.{ Speaker, Atendee, User, Activity, Tag }
 import spray.routing._
 
 /**
@@ -116,5 +116,40 @@ trait ActivityRouterDoc {
     new ApiResponse(code = 400, message = "Invalid ID supplied")
   ))
   def deleteRouteActivitySpeaker: Route
+
+  @ApiOperation(value = "Get all the tags in a activity by activityId", httpMethod = "GET", response = classOf[Tag])
+  @Path("/{activityId}/tags")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 200, message = "Ok"),
+    new ApiResponse(code = 404, message = "Activity not found")
+  ))
+  def readAllTagsInActivity: Route
+
+  @ApiOperation(value = "Add new tag to the activity", httpMethod = "POST", response = classOf[Tag])
+  @Path("/{activityId}/tags/{tagId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "tagId", value="ID of the tag", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid activity"),
+    new ApiResponse(code = 201, message = "Entity Created")
+  ))
+  def postRouteActivityTag: Route
+
+  @ApiOperation(value = "Remove a tag of the Activity", httpMethod = "DELETE", response = classOf[Int])
+  @Path("/{activityId}/tags/{tagId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "tagId", value="ID of the tag", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 404, message = "Entity not found"),
+    new ApiResponse(code = 400, message = "Invalid ID supplied")
+  ))
+  def deleteRouteActivityTag: Route
 
 }

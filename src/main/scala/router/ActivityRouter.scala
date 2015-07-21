@@ -18,7 +18,21 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
 
   val activityService: ActivityService
 
-  val activityOperations: Route = postRouteActivity ~ readRouteActivity ~ readAllRouteActivity ~ deleteRouteActivity
+  val activityOperations: Route =
+    postRouteActivity ~
+    readRouteActivity ~
+    readAllRouteActivity ~
+    deleteRouteActivity ~
+    readAllAtendeesInActivity ~
+    readAllSpeakersInActivity ~
+    postRouteActivityAtendee ~
+    postRouteActivitySpeaker ~
+    deleteRouteActivityAtendee ~
+    deleteRouteActivitySpeaker ~
+    readAllTagsInActivity ~
+    postRouteActivityTag ~
+    deleteRouteActivityTag
+
 
   override def readRouteActivity = path("activities" / IntNumber) { activityId =>
     get {
@@ -165,6 +179,50 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
       }
     }
   }
+
+  override def readAllTagsInActivity = path("activities" / IntNumber / "tags") { activityId =>
+    get {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        respondWithMediaType(`application/json`) {
+          onComplete(activityService.getAllTags(activityId)) {
+            case Success(tags) => complete(tags)
+            case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+          }
+        }
+      }
+    }
+  }
+
+  override def postRouteActivityTag: Route = path("activities" / IntNumber / "tags"/ IntNumber) { (activityId, tagId) =>
+    post {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.addTag(activityId, tagId)) {
+              case Success(activityTag) => complete(activityTag)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def deleteRouteActivityTag: Route = path("activities" / IntNumber / "tags"/ IntNumber) { (activityId, tagId) =>
+    delete {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          respondWithMediaType(`application/json`) {
+            onComplete(activityService.deleteTag(activityId, tagId)) {
+              case Success(activityTagId: Int) => complete(OK, activityTagId.toString)
+              case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
 
 
 }

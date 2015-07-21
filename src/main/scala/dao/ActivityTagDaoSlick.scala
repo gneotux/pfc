@@ -1,6 +1,6 @@
 package dao
 
-import model.{ ActivityTag, User }
+import model.{ Tag => ActTag, ActivityTag, User }
 import utils.DatabaseConfig.profile.api._
 
 
@@ -15,11 +15,13 @@ trait ActivityTagDao {
 
   def get(id: Int): DBIO[Option[ActivityTag]]
 
-  def getUsersByActivityId(activityId: Int): DBIO[Seq[User]]
+  def getTagsByActivityId(activityId: Int): DBIO[Seq[ActTag]]
 
   def add(user: ActivityTag): DBIO[Int]
 
   def delete(id: Int): DBIO[Int]
+
+  def deleteByActivityIdAndTagId(activityId: Int, tagId: Int): DBIO[Int]
 }
 
 trait ActivityTagDaoSlickImpl extends ActivityTagDao {
@@ -43,11 +45,11 @@ trait ActivityTagDaoSlickImpl extends ActivityTagDao {
 
   override def get(id: Int): DBIO[Option[ActivityTag]] = activityTags.filter(_.id === id).result.headOption
 
-  override def getUsersByActivityId(activityId: Int): DBIO[Seq[User]] =
+  override def getTagsByActivityId(activityId: Int): DBIO[Seq[ActTag]] =
     (for {
       activityTag <- activityTags if activityTag.activityId === activityId
-      user <- UserDao.users
-    } yield user).result
+      tag <- TagDao.tags if activityTag.tagId === tag.id
+    } yield tag).result
 
 
   override def add(activityTag: ActivityTag): DBIO[Int] = {
@@ -55,6 +57,10 @@ trait ActivityTagDaoSlickImpl extends ActivityTagDao {
   }
 
   override def delete(id: Int): DBIO[Int] = activityTags.filter(_.id === id).delete
+
+  override def deleteByActivityIdAndTagId(activityId: Int, tagId: Int): DBIO[Int] =
+    activityTags.filter(activityTag => activityTag.activityId === activityId && activityTag.tagId === tagId).delete
+
 }
 
 object ActivityTagDao extends ActivityTagDaoSlickImpl

@@ -20,6 +20,8 @@ trait ActivityService {
   def atendeeDao: AtendeeDao
   def speakerDao: SpeakerDao
   def userDao: UserDao
+  def activityTagDao: ActivityTagDao
+  def tagDao: TagDao
 
 
   def add(activity: ActivityDto): Future[Option[Activity]]
@@ -42,6 +44,12 @@ trait ActivityService {
 
   def delete(id: Int): Future[Int]
 
+  def getAllTags(activityId: Int): Future[Seq[Tag]]
+
+  def addTag(activityId: Int, tagId: Int): Future[Option[ActivityTag]]
+
+  def deleteTag(activityId: Int, tagId: Int): Future[Int]
+
   def populateActivity: ActivityDto => Activity = (activityDto: ActivityDto) =>
     Activity(
       0,
@@ -63,6 +71,8 @@ object ActivityService extends ActivityService {
   override val atendeeDao = AtendeeDao
   override val speakerDao = SpeakerDao
   override val userDao = UserDao
+  override val activityTagDao = ActivityTagDao
+  override val tagDao = TagDao
 
 
   override def add(activity: ActivityDto): Future[Option[Activity]] = db.run {
@@ -95,11 +105,11 @@ object ActivityService extends ActivityService {
   }
 
   override def deleteAtendee(activityId: Int, userId: Int): Future[Int] = db.run {
-    atendeeDao.deleteByUserAndActivityId(activityId, userId)
+    atendeeDao.deleteByUserAndActivityId(userId, activityId)
   }
 
   override def deleteSpeaker(activityId: Int, userId: Int): Future[Int] = db.run {
-    speakerDao.deleteByUserAndActivityId(activityId, userId)
+    speakerDao.deleteByUserAndActivityId(userId, activityId)
   }
 
   override def getAll(): Future[Seq[Activity]] = db.run {
@@ -120,6 +130,26 @@ object ActivityService extends ActivityService {
 
   override def delete(id: Int): Future[Int] = db.run {
     activityDao.delete(id)
+  }
+
+  override def getAllTags(activityId: Int): Future[Seq[Tag]] = db.run{
+    activityTagDao.getTagsByActivityId(activityId)
+  }
+
+
+  override def addTag(activityId: Int, tagId: Int): Future[Option[ActivityTag]] = db.run {
+    for {
+      activity <- activityDao.get(activityId)
+      //      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
+      tag <- tagDao.get(tagId)
+      //      _ = if (user.isEmpty) throw new NoSuchElementException(s"Speaker with userId: ${userId} not found")
+      activityTagId <- activityTagDao.add(ActivityTag(0,tagId,activityId))
+      activityTag <- activityTagDao.get(activityTagId)
+    } yield activityTag
+  }
+
+  override def deleteTag(activityId: Int, tagId: Int): Future[Int] = db.run {
+    activityTagDao.deleteByActivityIdAndTagId(activityId, tagId)
   }
 
 }
