@@ -3,6 +3,8 @@ package router.dto
 import com.wordnik.swagger.annotations.{ ApiModel, ApiModelProperty }
 import org.joda.time.DateTime
 import spray.json.DefaultJsonProtocol
+import utils.ApiFormats._
+
 
 import scala.annotation.meta.field
 

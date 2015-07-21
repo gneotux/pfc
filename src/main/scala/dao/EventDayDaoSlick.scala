@@ -3,6 +3,8 @@ package dao
 import model.EventDay
 import org.joda.time.DateTime
 import utils.DatabaseConfig.profile.api._
+import com.github.tototoshi.slick.JdbcJodaSupport._
+
 
 
 /**

@@ -1,12 +1,8 @@
 package dao
 
-import com.github.tototoshi.slick.JdbcJodaSupport._
-import com.wordnik.swagger.annotations.ApiModelProperty
 import model.Event
-import org.joda.time.DateTime
 import utils.DatabaseConfig.profile.api._
 
-import scala.annotation.meta.field
 
 /**
  * Created by gneotux on 17/07/15.

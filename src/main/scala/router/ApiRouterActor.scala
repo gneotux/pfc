@@ -17,7 +17,8 @@ class ApiRouterActor(
   locationServ: LocationService,
   companyServ: CompanyService,
   tagServ: TagService,
-  eventDayServ: EventDayService
+  eventDayServ: EventDayService,
+  activityTypeServ: ActivityTypeService
 ) extends Actor
   with UserRouter
   with ActivityRouter
@@ -26,6 +27,7 @@ class ApiRouterActor(
   with CompanyRouter
   with TagRouter
   with EventDayRouter
+  with ActivityTypeRouter
   with ActorLogging
   with Authenticator
 {
@@ -37,6 +39,7 @@ class ApiRouterActor(
   override val companyService = companyServ
   override val tagService = tagServ
   override val eventDayService = eventDayServ
+  override val activityTypeService = activityTypeServ
 
   val swaggerService = new SwaggerHttpService {
     override def apiTypes =
@@ -47,7 +50,8 @@ class ApiRouterActor(
         typeOf[LocationRouterDoc],
         typeOf[CompanyRouterDoc],
         typeOf[TagRouterDoc],
-        typeOf[EventDayRouterDoc]
+        typeOf[EventDayRouterDoc],
+        typeOf[ActivityTypeRouterDoc]
       )
     override def apiVersion = "0.1"
     override def baseUrl = "/" // let swagger-ui determine the host and port
@@ -71,6 +75,7 @@ class ApiRouterActor(
     companyOperations ~
     tagOperations ~
     eventDayOperations ~
+    activityTypeOperations ~
     swaggerService.routes ~
     get {
       pathPrefix("") { pathEndOrSingleSlash {

@@ -25,7 +25,8 @@ object Boot extends App {
       LocationService,
       CompanyService,
       TagService,
-      EventDayService
+      EventDayService,
+      ActivityTypeService
     ), app.userServiceName)
 
   implicit val timeout = Timeout(5.seconds)
