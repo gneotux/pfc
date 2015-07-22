@@ -19,9 +19,9 @@ object DatabaseSupportSpec {
     UserPassword(3, Some("$2a$10$U3gBQ50FY5qiQ5XeQKgWwO6AADKjaGqh/6l3RzWitAWelWCQxffUC"), "$2a$10$U3gBQ50FY5qiQ5XeQKgWwO")
   )
   lazy val users = Seq(
-    User(1, "test1@test.com", Some("name1"), Some("surname1"), None, None, None, Some(1)),
-    User(2, "test2@test.com", Some("name2"), Some("surname2"), None, None, None, Some(2)),
-    User(3, "test3@test.com", Some("name3"), Some("surname3"), None, None, None, Some(3))
+    User(1, "test1@test.com", Some("name1"), Some("surname1"), None, None, None, "ADMIN",Some(1)),
+    User(2, "test2@test.com", Some("name2"), Some("surname2"), None, None, None, "USER",Some(2)),
+    User(3, "test3@test.com", Some("name3"), Some("surname3"), None, None, None, "USER",Some(3))
   )
 }
 

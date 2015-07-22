@@ -18,11 +18,12 @@ class UserIntegrationSpec extends Specification with Specs2RouteTest with UserRo
 
   override val userService = UserService
 
-  val user = BasicHttpCredentials("test1@test.com", "password1")
+  val userAdmin = BasicHttpCredentials("test1@test.com", "password1")
+  val userNotAdmin = BasicHttpCredentials("test2@test.com", "password1")
 
   "Users Endpoint" should {
     "leave GET requests to other paths unhandled" in this {
-      Get("/kermit") ~> addCredentials(user) ~> userOperations ~>  check  {
+      Get("/kermit") ~> addCredentials(userAdmin) ~> userOperations ~>  check  {
         handled must beFalse
       }
     }
@@ -30,30 +31,42 @@ class UserIntegrationSpec extends Specification with Specs2RouteTest with UserRo
 
   "Users Endpoint#users" should {
     "return a list of users for GET requests to users path" in this {
-      Get("/users") ~> addCredentials(user) ~> userOperations ~> check {
+      Get("/users") ~> addCredentials(userAdmin) ~> userOperations ~> check {
         responseAs[Seq[User]] === DatabaseSupportSpec.users
       }
     }
 
 
     "return a single user for GET requests to users path" in this {
-      Get("/users/1") ~> addCredentials(user) ~> userOperations ~> check {
+      Get("/users/1") ~> addCredentials(userAdmin) ~> userOperations ~> check {
         responseAs[User] === DatabaseSupportSpec.users.head
       }
     }
 
     "return the id for DELETE requests to users path" in this {
-      Delete("/users/1") ~> addCredentials(user) ~> userOperations ~> check {
+      Delete("/users/1") ~> addCredentials(userAdmin) ~> userOperations ~> check {
         status mustEqual StatusCodes.OK
       }
     }
 
     "return the correct user for POST requests to users path" in this {
-      Post("/users", UserDto("test4@gmail.com", Some("name4"), Some("surname4"), "password1")) ~> addCredentials(user) ~> userOperations ~> check {
+      Post("/users", UserDto("test4@test.com", Some("name4"), Some("surname4"), None, None, None, "USER", "NEWPASSWORD")) ~> addCredentials(userAdmin) ~> userOperations ~> check {
         status mustEqual StatusCodes.Created
-        responseAs[User] === User(4, "test4@gmail.com", Some("name4"), Some("surname4"), None, None, None, Some(4))
+        responseAs[User] === User(4, "test4@test.com", Some("name4"), Some("surname4"), None, None, None, "USER", Some(4))
       }
     }
+
+//    "return not authorized for user without valid permission for DELETE requests to users path" in this {
+//      Delete("/users/1") ~> addCredentials(userNotAdmin) ~> userOperations ~> check {
+//        status mustEqual StatusCodes.InternalServerError
+//      }
+//    }.isSkipped
+//
+//    "return not authorized for user without valid permission for POST requests to users path" in this {
+//      Post("/users", UserDto("test4@test.com", Some("name4"), Some("surname4"), None, None, None, "USER", "NEWPASSWORD")) ~> addCredentials(userNotAdmin) ~> userOperations ~> check {
+//        status mustEqual StatusCodes.InternalServerError
+//      }
+//    }.isSkipped
   }
 
 
