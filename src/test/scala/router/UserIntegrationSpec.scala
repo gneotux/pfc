@@ -1,5 +1,6 @@
 package router
 
+import dao.UserDao
 import model.User
 import org.specs2.mock._
 import org.specs2.mutable.Specification
@@ -9,6 +10,11 @@ import spray.http.{ StatusCodes, BasicHttpCredentials }
 import spray.httpx.SprayJsonSupport._
 import spray.testkit.Specs2RouteTest
 import utils.{ DatabaseSupportSpec, SpecSupport }
+import utils.DatabaseConfig.db
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 
 
 class UserIntegrationSpec extends Specification with Specs2RouteTest with UserRouter with SpecSupport with Authenticator with Mockito {
@@ -46,6 +52,8 @@ class UserIntegrationSpec extends Specification with Specs2RouteTest with UserRo
     "return the id for DELETE requests to users path" in this {
       Delete("/users/1") ~> addCredentials(userAdmin) ~> userOperations ~> check {
         status mustEqual StatusCodes.OK
+        val result: Seq[User] = Await.result(db.run{UserDao.getAll}, Duration.Inf)
+        result mustEqual DatabaseSupportSpec.users.filterNot(_.id == 1)
       }
     }
 
