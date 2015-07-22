@@ -18,7 +18,7 @@ trait UserRouterDoc {
     ))
     def readRouteUser: Route
 
-    @ApiOperation(value = "Get all the users", httpMethod = "GET", response = classOf[List[User]])
+    @ApiOperation(value = "Get all the users", httpMethod = "GET", responseContainer = "List", response = classOf[User])
     def readAllRouteUser: Route
 
     @ApiOperation(value = "Delete a user by id", httpMethod = "DELETE", response = classOf[Int])

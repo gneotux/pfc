@@ -20,7 +20,7 @@ trait LocationRouterDoc {
   ))
   def readRouteLocation: Route
 
-  @ApiOperation(value = "Get all the locations", httpMethod = "GET", response = classOf[List[Location]])
+  @ApiOperation(value = "Get all the locations", httpMethod = "GET", responseContainer = "List", response = classOf[Location])
   def readAllRouteLocation: Route
 
   @ApiOperation(value = "Delete a location by id", httpMethod = "DELETE", response = classOf[Int])

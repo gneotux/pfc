@@ -23,30 +23,8 @@ trait ActivityRouterDoc {
   ))
   def readRouteActivity: Route
 
-  @ApiOperation(value = "Get all the activities", httpMethod = "GET", response = classOf[List[Activity]])
+  @ApiOperation(value = "Get all the activities", httpMethod = "GET", responseContainer = "List", response = classOf[Activity])
   def readAllRouteActivity: Route
-
-  @ApiOperation(value = "Get all the atendees in a activity by activityId", httpMethod = "GET", response = classOf[User])
-  @Path("/{activityId}/atendees")
-  @ApiImplicitParams(Array(
-    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )
-  ))
-  @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "Ok"),
-    new ApiResponse(code = 404, message = "Activity not found")
-  ))
-  def readAllAtendeesInActivity: Route
-
-  @ApiOperation(value = "Get all the speakers in a activity by activityId", httpMethod = "GET", response = classOf[User])
-  @Path("/{activityId}/speakers")
-  @ApiImplicitParams(Array(
-    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )
-  ))
-  @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "Ok"),
-    new ApiResponse(code = 404, message = "Activity not found")
-  ))
-  def readAllSpeakersInActivity: Route
 
   @ApiOperation(value = "Delete a activity by id", httpMethod = "DELETE", response = classOf[Int])
   @ApiImplicitParams(Array(
@@ -69,6 +47,17 @@ trait ActivityRouterDoc {
   ))
   def postRouteActivity: Route
 
+  @ApiOperation(value = "Get all the atendees in a activity by activityId", httpMethod = "GET", responseContainer = "List", response = classOf[User])
+  @Path("/{activityId}/atendees")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 200, message = "Ok"),
+    new ApiResponse(code = 404, message = "Activity not found")
+  ))
+  def readAllAtendeesInActivity: Route
+
   @ApiOperation(value = "Add a new atendee for the Activity", httpMethod = "POST", response = classOf[Atendee])
   @Path("/{activityId}/speakers/{userId}")
   @ApiImplicitParams(Array(
@@ -80,18 +69,6 @@ trait ActivityRouterDoc {
     new ApiResponse(code = 201, message = "Entity Created")
   ))
   def postRouteActivityAtendee: Route
-
-  @ApiOperation(value = "Add new speaker for the activity", httpMethod = "POST", response = classOf[Speaker])
-  @Path("/{activityId}/speakers/{userId}")
-  @ApiImplicitParams(Array(
-    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
-    new ApiImplicitParam(name = "userId", value="ID of the user", required = true, dataType = "integer", paramType = "path" )
-  ))
-  @ApiResponses(Array(
-    new ApiResponse(code = 405, message = "Invalid activity"),
-    new ApiResponse(code = 201, message = "Entity Created")
-  ))
-  def postRouteActivitySpeaker: Route
 
   @ApiOperation(value = "Remove an atendee for the Activity", httpMethod = "DELETE", response = classOf[Int])
   @Path("/{activityId}/speakers/{userId}")
@@ -105,6 +82,29 @@ trait ActivityRouterDoc {
   ))
   def deleteRouteActivityAtendee: Route
 
+  @ApiOperation(value = "Get all the speakers in a activity by activityId", httpMethod = "GET", responseContainer = "List", response = classOf[User])
+  @Path("/{activityId}/speakers")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 200, message = "Ok"),
+    new ApiResponse(code = 404, message = "Activity not found")
+  ))
+  def readAllSpeakersInActivity: Route
+
+  @ApiOperation(value = "Add new speaker for the activity", httpMethod = "POST", response = classOf[Speaker])
+  @Path("/{activityId}/speakers/{userId}")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "userId", value="ID of the user", required = true, dataType = "integer", paramType = "path" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid activity"),
+    new ApiResponse(code = 201, message = "Entity Created")
+  ))
+  def postRouteActivitySpeaker: Route
+
   @ApiOperation(value = "Remove a speaker for the activity", httpMethod = "DELETE", response = classOf[Int])
   @Path("/{activityId}/speakers/{userId}")
   @ApiImplicitParams(Array(
@@ -117,7 +117,7 @@ trait ActivityRouterDoc {
   ))
   def deleteRouteActivitySpeaker: Route
 
-  @ApiOperation(value = "Get all the tags in a activity by activityId", httpMethod = "GET", response = classOf[Tag])
+  @ApiOperation(value = "Get all the tags in a activity by activityId", httpMethod = "GET", responseContainer = "List", response = classOf[Tag])
   @Path("/{activityId}/tags")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )

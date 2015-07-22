@@ -22,7 +22,7 @@ trait EventRouterDoc {
   ))
   def readRouteEvent: Route
 
-  @ApiOperation(value = "Get all the events", httpMethod = "GET", response = classOf[List[Event]])
+  @ApiOperation(value = "Get all the events", httpMethod = "GET", responseContainer = "List", response = classOf[Event])
   def readAllRouteEvent: Route
 
   @ApiOperation(value = "Delete a event by id", httpMethod = "DELETE", response = classOf[Int])
@@ -46,7 +46,7 @@ trait EventRouterDoc {
   ))
   def postRouteEvent: Route
 
-  @ApiOperation(value = "Get all the sponsors in a event by eventId", httpMethod = "GET", response = classOf[Company])
+  @ApiOperation(value = "Get all the sponsors in a event by eventId", httpMethod = "GET", responseContainer = "List", response = classOf[Company])
   @Path("/{eventId}/sponsors")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "eventId", value="ID of the event", required = true, dataType = "integer", paramType = "path" )

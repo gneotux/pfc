@@ -18,7 +18,14 @@ trait EventRouter extends HttpService with EventRouterDoc {
 
   val eventService: EventService
 
-  val eventOperations: Route = postRouteEvent ~ readRouteEvent ~ readAllRouteEvent ~ deleteRouteEvent
+  val eventOperations: Route =
+    postRouteEvent ~
+    readRouteEvent ~
+    readAllRouteEvent ~
+    deleteRouteEvent ~
+    readAllSponsorsInEvent ~
+    postRouteEventSponsor ~
+    deleteRouteEventSponsor
 
   override def readRouteEvent = path("events" / IntNumber) { eventId =>
     get {
@@ -93,7 +100,7 @@ trait EventRouter extends HttpService with EventRouterDoc {
     }
   }
 
-  override def postRouteEventSponsor: Route = path("events" / IntNumber / "sponsor"/ IntNumber) { (eventId, companyId) =>
+  override def postRouteEventSponsor: Route = path("events" / IntNumber / "sponsors"/ IntNumber) { (eventId, companyId) =>
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
         authorize(authInfo.hasPermissions("ADMIN")) {
@@ -108,7 +115,7 @@ trait EventRouter extends HttpService with EventRouterDoc {
     }
   }
 
-  override def deleteRouteEventSponsor: Route = path("events" / IntNumber / "sponsor" / IntNumber) { (eventId, companyId) =>
+  override def deleteRouteEventSponsor: Route = path("events" / IntNumber / "sponsors" / IntNumber) { (eventId, companyId) =>
     delete {
       authenticate(basicUserAuthenticator) { authInfo =>
         authorize(authInfo.hasPermissions("ADMIN")) {

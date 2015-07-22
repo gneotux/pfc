@@ -18,7 +18,7 @@ trait TagRouterDoc {
   ))
   def readRouteTag: Route
 
-  @ApiOperation(value = "Get all the tags", httpMethod = "GET", response = classOf[List[Tag]])
+  @ApiOperation(value = "Get all the tags", httpMethod = "GET", responseContainer = "List", response = classOf[Tag])
   def readAllRouteTag: Route
 
   @ApiOperation(value = "Delete a tag by id", httpMethod = "DELETE", response = classOf[Int])

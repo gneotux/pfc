@@ -20,7 +20,7 @@ trait EventDayRouterDoc {
   ))
   def readRouteEventDay: Route
 
-  @ApiOperation(value = "Get all the eventdays", httpMethod = "GET", response = classOf[List[EventDay]])
+  @ApiOperation(value = "Get all the eventdays", httpMethod = "GET", responseContainer = "List", response = classOf[EventDay])
   def readAllRouteEventDay: Route
 
   @ApiOperation(value = "Delete a eventday by id", httpMethod = "DELETE", response = classOf[Int])

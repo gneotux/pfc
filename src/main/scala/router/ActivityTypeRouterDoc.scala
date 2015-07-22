@@ -22,7 +22,7 @@ trait ActivityTypeRouterDoc {
   ))
   def readRouteActivityType: Route
 
-  @ApiOperation(value = "Get all the activityTypes", httpMethod = "GET", response = classOf[List[ActivityType]])
+  @ApiOperation(value = "Get all the activityTypes", httpMethod = "GET", responseContainer = "List", response = classOf[ActivityType])
   def readAllRouteActivityType: Route
 
   @ApiOperation(value = "Delete a activityType by id", httpMethod = "DELETE", response = classOf[Int])

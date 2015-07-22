@@ -18,7 +18,7 @@ trait CompanyRouterDoc {
   ))
   def readRouteCompany: Route
 
-  @ApiOperation(value = "Get all the companies", httpMethod = "GET", response = classOf[List[Company]])
+  @ApiOperation(value = "Get all the companies", httpMethod = "GET", responseContainer = "List", response = classOf[Company])
   def readAllRouteCompany: Route
 
   @ApiOperation(value = "Delete a company by id", httpMethod = "DELETE", response = classOf[Int])
