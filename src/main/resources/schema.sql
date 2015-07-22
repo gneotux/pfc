@@ -6,6 +6,7 @@ create table "users"
 "twitter_id" VARCHAR(254),
 "linkedin_id" VARCHAR(254),
 "bio" VARCHAR(254),
+"permission" VARCHAR(254),
 "password_id" integer
 );
 
