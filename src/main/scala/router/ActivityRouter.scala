@@ -113,7 +113,7 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
         authorize(authInfo.hasPermissions("ADMIN")) {
           respondWithMediaType(`application/json`) {
             onComplete(activityService.addAtendee(activityId, userId)) {
-              case Success(atendee) => complete(atendee)
+              case Success(atendee) => complete(Created, atendee)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
             }
           }
@@ -157,7 +157,7 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
         authorize(authInfo.hasPermissions("ADMIN")) {
           respondWithMediaType(`application/json`) {
             onComplete(activityService.addSpeaker(activityId, userId)) {
-              case Success(speaker) => complete(speaker)
+              case Success(speaker) => complete(Created, speaker)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
             }
           }
@@ -201,7 +201,7 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
         authorize(authInfo.hasPermissions("ADMIN")) {
           respondWithMediaType(`application/json`) {
             onComplete(activityService.addTag(activityId, tagId)) {
-              case Success(activityTag) => complete(activityTag)
+              case Success(activityTag) => complete(Created, activityTag)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
             }
           }

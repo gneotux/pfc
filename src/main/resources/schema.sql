@@ -112,6 +112,9 @@ VALUES (1, 'alejandro@pfc.com', 'Alejandro', 'Baldominos', '', '', '', 'ADMIN',2
 INSERT INTO activities(
 id, event_id, location_id, activity_type_id, title, description, objective, start_time, end_time, resources
 ) VALUES (1, 1, 1, 1, 'Welcome talk', 'This is the meeting and greetings for the scala days', 'Meeting and saying hellos', TIMESTAMP '2015-07-16 15:00:00', TIMESTAMP '2015-07-19 21:00:00', 'github/gneotux');
+INSERT INTO activities(
+id, event_id, location_id, activity_type_id, title, description, objective, start_time, end_time, resources
+) VALUES (2, 1, 2, 5, 'Is Java Alive?', 'Do we need Java anymore?', 'Discuss about the future of Scala in the JVM', TIMESTAMP '2015-07-17 15:00:00', TIMESTAMP '2015-07-17 21:00:00', 'github/gneotux');
 
 INSERT INTO events(id, name, description, website, twitter_hashtag, logo_url) VALUES (1, 'ScalaDays', 'The most important event in the scala world', 'www.scaladays.com', '#scaladays', 'http://scaladays.jpg');
 INSERT INTO events(id, name, description, website, twitter_hashtag, logo_url) VALUES (2, 'ScalaWorld', 'The second most important event in the scala world', 'www.scala-world.com', '#scalaworld', 'http://scalaworld.jpg');
