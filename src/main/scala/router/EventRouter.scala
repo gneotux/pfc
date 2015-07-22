@@ -106,7 +106,7 @@ trait EventRouter extends HttpService with EventRouterDoc {
         authorize(authInfo.hasPermissions("ADMIN")) {
           respondWithMediaType(`application/json`) {
             onComplete(eventService.addSponsor(eventId, companyId)) {
-              case Success(sponsor) => complete(sponsor)
+              case Success(sponsor) => complete(Created, sponsor)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
             }
           }
