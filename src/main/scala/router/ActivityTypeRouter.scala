@@ -20,7 +20,7 @@ trait ActivityTypeRouter extends HttpService with ActivityTypeRouterDoc {
 
   val activityTypeOperations: Route = postRouteActivityType ~ readRouteActivityType ~ readAllRouteActivityType ~ deleteRouteActivityType
 
-  override def readRouteActivityType = path("eventdays" / IntNumber) { activityTypeId =>
+  override def readRouteActivityType = path("activitytypes" / IntNumber) { activityTypeId =>
     get {
       authenticate(basicUserAuthenticator) { authInfo =>
         respondWithMediaType(`application/json`) {
@@ -34,7 +34,7 @@ trait ActivityTypeRouter extends HttpService with ActivityTypeRouterDoc {
     }
   }
 
-  override def readAllRouteActivityType = path("eventdays") {
+  override def readAllRouteActivityType = path("activitytypes") {
     get {
       authenticate(basicUserAuthenticator) { authInfo =>
         respondWithMediaType(`application/json`) {
@@ -47,7 +47,7 @@ trait ActivityTypeRouter extends HttpService with ActivityTypeRouterDoc {
     }
   }
 
-  override def deleteRouteActivityType = path("eventdays" / IntNumber) { activityTypeId =>
+  override def deleteRouteActivityType = path("activitytypes" / IntNumber) { activityTypeId =>
     delete {
       authenticate(basicUserAuthenticator) { authInfo =>
         authorize(authInfo.hasPermissions("ADMIN")) {
@@ -62,7 +62,7 @@ trait ActivityTypeRouter extends HttpService with ActivityTypeRouterDoc {
     }
   }
 
-  override def postRouteActivityType: Route = path("eventdays") {
+  override def postRouteActivityType: Route = path("activitytypes") {
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
         authorize(authInfo.hasPermissions("ADMIN")) {
