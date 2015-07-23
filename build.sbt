@@ -1,3 +1,7 @@
+import NativePackagerKeys._
+
+packageArchetype.java_application
+
 version       := "0.1"
 
 scalaVersion  := "2.11.6"
@@ -37,4 +41,3 @@ fork in Test := false
 parallelExecution in Test := false
 
 Revolver.settings
-
