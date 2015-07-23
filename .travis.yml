@@ -8,6 +8,6 @@ jdk:
 
 script:
   # Your normal script
-  - sbt ++$TRAVIS_SCALA_VERSION -J-XX:ReservedCodeCacheSize=256M clean coverage test
+  - sbt -sbt-version 0.13.0 ++$TRAVIS_SCALA_VERSION -J-XX:ReservedCodeCacheSize=256M clean coverage test
 
 after_success: "sbt coveralls"
