@@ -13,6 +13,9 @@ case class Company(
   @(ApiModelProperty @field)(value = "unique identifier for the company")
   id: Int,
 
+  @(ApiModelProperty @field)(value = "name of the company")
+  name: String,
+
   @(ApiModelProperty @field)(value = "email for the contact of the company")
   email: String,
 
@@ -29,5 +32,5 @@ case class Company(
   logoUrl: Option[String] = None
 )
 object Company extends DefaultJsonProtocol{
-  implicit val companyFormat = jsonFormat6(Company.apply)
+  implicit val companyFormat = jsonFormat7(Company.apply)
 }

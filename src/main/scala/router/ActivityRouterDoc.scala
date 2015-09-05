@@ -127,7 +127,7 @@ trait ActivityRouterDoc {
   ))
   def readAllTagsInActivity: Route
 
-  @ApiOperation(value = "Add new tag to the activity", httpMethod = "POST", response = classOf[Tag])
+  @ApiOperation(value = "Add new tag to the activity", httpMethod = "POST", response = classOf[ActivityTag])
   @Path("/{activityId}/tags/{tagId}")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),

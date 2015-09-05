@@ -87,8 +87,8 @@ object DatabaseSupportSpec {
   )
   
   lazy val companies = Seq(
-    Company(1, "rrhh@commodityvectors.com", Some("+341234567"), Some("We do some cool stuff"), Some("www.commodityvectors.com"), Some("commodityvectors.com/logo.jpg")),
-    Company(2, "rrhh@genscape.com", Some("+341234567"), Some("We do some cool stuff too"), Some("www.genscape.com"), Some("genscpae.com/logo.jpg"))
+    Company(1, "CommodityVectors", "rrhh@commodityvectors.com", Some("+341234567"), Some("We do some cool stuff"), Some("www.commodityvectors.com"), Some("commodityvectors.com/logo.jpg")),
+    Company(2, "Genscape", "rrhh@genscape.com", Some("+341234567"), Some("We do some cool stuff too"), Some("www.genscape.com"), Some("genscpae.com/logo.jpg"))
   )
 
   lazy val sponsors = Seq(

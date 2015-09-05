@@ -57,10 +57,10 @@ class CompanyIntegrationSpec extends Specification with Specs2RouteTest with Com
     }
 
     "return the correct company for POST requests to companies path" in this {
-      Post("/companies", CompanyDto("emailofthenewcompany@Company")
+      Post("/companies", CompanyDto("Hypercomplumeganet", "emailofthenewcompany@Company")
       ) ~> addCredentials(userAdmin) ~> companyOperations ~> check {
         status mustEqual StatusCodes.Created
-        responseAs[Company] ===  Company(3, "emailofthenewcompany@Company")
+        responseAs[Company] ===  Company(3, "Hypercomplumeganet", "emailofthenewcompany@Company")
       }
     }
 

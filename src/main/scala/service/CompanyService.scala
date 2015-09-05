@@ -24,6 +24,7 @@ trait CompanyService {
   def populateCompany: CompanyDto => Company = (companyDto: CompanyDto) =>
     Company(
       0,
+      companyDto.name,
       companyDto.email,
       companyDto.phone,
       companyDto.description,

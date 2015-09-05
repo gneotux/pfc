@@ -10,6 +10,10 @@ import scala.annotation.meta.field
  */
 @ApiModel(description = "An Company creation entity")
 case class CompanyDto(
+
+  @(ApiModelProperty @field)(required = true, value = "name of the company")
+  name: String,
+
   @(ApiModelProperty @field)(required = true, value = "email for the contact of the company")
   email: String,
 
@@ -26,5 +30,5 @@ case class CompanyDto(
   logoUrl: Option[String] = None
 )
 object CompanyDto extends DefaultJsonProtocol{
-  implicit val companyFormat = jsonFormat5(CompanyDto.apply)
+  implicit val companyFormat = jsonFormat6(CompanyDto.apply)
 }

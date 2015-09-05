@@ -23,6 +23,8 @@ trait CompanyDaoSlickImpl extends CompanyDao {
 
     def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
+    def name: Rep[String] = column[String]("name")
+
     def email: Rep[String] = column[String]("email")
 
     def phone: Rep[Option[String]] = column[Option[String]]("phone")
@@ -33,7 +35,7 @@ trait CompanyDaoSlickImpl extends CompanyDao {
 
     def logoUrl: Rep[Option[String]] = column[Option[String]]("logo_url")
 
-    def * = (id, email, phone, description, website, logoUrl) <>((Company.apply _).tupled, Company.unapply)
+    def * = (id, name, email, phone, description, website, logoUrl) <>((Company.apply _).tupled, Company.unapply)
   }
 
   val companies = TableQuery[Companies]
