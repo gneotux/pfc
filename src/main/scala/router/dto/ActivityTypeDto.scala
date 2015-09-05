@@ -11,7 +11,7 @@ import scala.annotation.meta.field
  */
 @ApiModel(description = "An activity type entity")
 case class ActivityTypeDto(
-  @(ApiModelProperty@field)(value = "activity type description")
+  @(ApiModelProperty@field)(required = true, value = "activity type description")
   description: String
 )
 

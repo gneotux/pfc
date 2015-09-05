@@ -13,13 +13,13 @@ import scala.annotation.meta.field
  */
 @ApiModel(description = "An event day entity")
 case class EventDayDto(
-  @(ApiModelProperty@field)(value = "event id")
+  @(ApiModelProperty@field)(required = true, value = "event id")
   eventId: Int,
 
-  @(ApiModelProperty@field)(value = "event day start time")
+  @(ApiModelProperty@field)(required = true, value = "event day start time")
   startTime: DateTime,
 
-  @(ApiModelProperty@field)(value = "event day end time")
+  @(ApiModelProperty@field)(required = true, value = "event day end time")
   endTime: DateTime
 )
 
