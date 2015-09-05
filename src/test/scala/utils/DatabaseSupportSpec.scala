@@ -78,8 +78,8 @@ object DatabaseSupportSpec {
     ActivityTag(3, 3, 1)
   )
   
-  lazy val atendees = Seq(
-    Atendee(1, 2 , 1)
+  lazy val attendees = Seq(
+    Attendee(1, 2 , 1)
   )
 
   lazy val speakers = Seq(
@@ -109,7 +109,7 @@ trait SpecSupport extends Specification with BeforeAfterEach {
       ActivityTypeDao.activityTypes.schema ++
       TagDao.tags.schema ++
       ActivityTagDao.activityTags.schema ++
-      AtendeeDao.atendees.schema ++
+      AttendeeDao.attendees.schema ++
       SpeakerDao.speakers.schema ++
       CompanyDao.companies.schema ++
       SponsorDao.sponsors.schema
@@ -126,7 +126,7 @@ trait SpecSupport extends Specification with BeforeAfterEach {
           ActivityTypeDao.activityTypes.schema ++
           TagDao.tags.schema ++
           ActivityTagDao.activityTags.schema ++
-          AtendeeDao.atendees.schema ++
+          AttendeeDao.attendees.schema ++
           SpeakerDao.speakers.schema ++
           CompanyDao.companies.schema ++
           SponsorDao.sponsors.schema
@@ -141,7 +141,7 @@ trait SpecSupport extends Specification with BeforeAfterEach {
         TagDao.tags ++= DatabaseSupportSpec.tags,
         ActivityTagDao.activityTags ++= DatabaseSupportSpec.activityTags, 
         SpeakerDao.speakers ++= DatabaseSupportSpec.speakers,
-        AtendeeDao.atendees ++= DatabaseSupportSpec.atendees,
+        AttendeeDao.attendees ++= DatabaseSupportSpec.attendees,
         CompanyDao.companies ++= DatabaseSupportSpec.companies,
         SponsorDao.sponsors ++= DatabaseSupportSpec.sponsors
       )

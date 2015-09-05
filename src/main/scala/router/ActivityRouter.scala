@@ -23,11 +23,11 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
     readRouteActivity ~
     readAllRouteActivity ~
     deleteRouteActivity ~
-    readAllAtendeesInActivity ~
+    readAllAttendeesInActivity ~
     readAllSpeakersInActivity ~
-    postRouteActivityAtendee ~
+    postRouteActivityAttendee ~
     postRouteActivitySpeaker ~
-    deleteRouteActivityAtendee ~
+    deleteRouteActivityAttendee ~
     deleteRouteActivitySpeaker ~
     readAllTagsInActivity ~
     postRouteActivityTag ~
@@ -94,11 +94,11 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
     }
   }
 
-  override def readAllAtendeesInActivity = path("activities" / IntNumber / "atendees") { activityId =>
+  override def readAllAttendeesInActivity = path("activities" / IntNumber / "attendees") { activityId =>
     get {
       authenticate(basicUserAuthenticator) { authInfo =>
         respondWithMediaType(`application/json`) {
-          onComplete(activityService.getAllAtendees(activityId)) {
+          onComplete(activityService.getAllAttendees(activityId)) {
             case Success(atendees) => complete(atendees)
             case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
           }
@@ -107,12 +107,12 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
     }
   }
 
-  override def postRouteActivityAtendee: Route = path("activities" / IntNumber / "atendees" / IntNumber) { (activityId, userId) =>
+  override def postRouteActivityAttendee: Route = path("activities" / IntNumber / "attendees" / IntNumber) { (activityId, userId) =>
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
         authorize(authInfo.hasPermissions("ADMIN")) {
           respondWithMediaType(`application/json`) {
-            onComplete(activityService.addAtendee(activityId, userId)) {
+            onComplete(activityService.addAttendee(activityId, userId)) {
               case Success(atendee) => complete(Created, atendee)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
             }
@@ -122,12 +122,12 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
     }
   }
 
-  override def deleteRouteActivityAtendee: Route = path("activities" / IntNumber / "atendees" / IntNumber) { (activityId, userId) =>
+  override def deleteRouteActivityAttendee: Route = path("activities" / IntNumber / "attendees" / IntNumber) { (activityId, userId) =>
     delete {
       authenticate(basicUserAuthenticator) { authInfo =>
         authorize(authInfo.hasPermissions("ADMIN")) {
           respondWithMediaType(`application/json`) {
-            onComplete(activityService.deleteAtendee(activityId, userId)) {
+            onComplete(activityService.deleteAttendee(activityId, userId)) {
               case Success(atendeeId: Int) => complete(OK, atendeeId.toString)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
             }

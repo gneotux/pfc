@@ -1,10 +1,9 @@
 package router
 
-import java.lang.annotation.Annotation
-
 import javax.ws.rs.Path
+
 import com.wordnik.swagger.annotations._
-import model.{ Speaker, Atendee, User, Activity, Tag }
+import model._
 import spray.routing._
 
 /**
@@ -47,8 +46,8 @@ trait ActivityRouterDoc {
   ))
   def postRouteActivity: Route
 
-  @ApiOperation(value = "Get all the atendees in a activity by activityId", httpMethod = "GET", responseContainer = "List", response = classOf[User])
-  @Path("/{activityId}/atendees")
+  @ApiOperation(value = "Get all the attendees in a activity by activityId", httpMethod = "GET", responseContainer = "List", response = classOf[User])
+  @Path("/{activityId}/attendees")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" )
   ))
@@ -56,10 +55,10 @@ trait ActivityRouterDoc {
     new ApiResponse(code = 200, message = "Ok"),
     new ApiResponse(code = 404, message = "Activity not found")
   ))
-  def readAllAtendeesInActivity: Route
+  def readAllAttendeesInActivity: Route
 
-  @ApiOperation(value = "Add a new atendee for the Activity", httpMethod = "POST", response = classOf[Atendee])
-  @Path("/{activityId}/speakers/{userId}")
+  @ApiOperation(value = "Add a new attendee for the Activity", httpMethod = "POST", response = classOf[Attendee])
+  @Path("/{activityId}/attendees/{userId}")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
     new ApiImplicitParam(name = "userId", value="ID of the user", required = true, dataType = "integer", paramType = "path" )
@@ -68,10 +67,10 @@ trait ActivityRouterDoc {
     new ApiResponse(code = 405, message = "Invalid activity"),
     new ApiResponse(code = 201, message = "Entity Created")
   ))
-  def postRouteActivityAtendee: Route
+  def postRouteActivityAttendee: Route
 
-  @ApiOperation(value = "Remove an atendee for the Activity", httpMethod = "DELETE", response = classOf[Int])
-  @Path("/{activityId}/speakers/{userId}")
+  @ApiOperation(value = "Remove an attendee for the Activity", httpMethod = "DELETE", response = classOf[Int])
+  @Path("/{activityId}/attendees/{userId}")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "activityId", value="ID of the activity", required = true, dataType = "integer", paramType = "path" ),
     new ApiImplicitParam(name = "userId", value="ID of the user", required = true, dataType = "integer", paramType = "path" )
@@ -80,7 +79,7 @@ trait ActivityRouterDoc {
     new ApiResponse(code = 404, message = "Entity not found"),
     new ApiResponse(code = 400, message = "Invalid ID supplied")
   ))
-  def deleteRouteActivityAtendee: Route
+  def deleteRouteActivityAttendee: Route
 
   @ApiOperation(value = "Get all the speakers in a activity by activityId", httpMethod = "GET", responseContainer = "List", response = classOf[User])
   @Path("/{activityId}/speakers")

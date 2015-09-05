@@ -10,8 +10,8 @@ import scala.annotation.meta.field
  * Created by gneotux on 16/07/15.
  */
 @ApiModel(description = "An atendee entity")
-case class Atendee(
-  @(ApiModelProperty@field)(value = "unique identifier for the atendee-activity relation")
+case class Attendee(
+  @(ApiModelProperty@field)(value = "unique identifier for the attendee-activity relation")
   id: Int,
 
   @(ApiModelProperty@field)(value = "user id")
@@ -21,6 +21,6 @@ case class Atendee(
   activityId: Int
 )
 
-object Atendee extends DefaultJsonProtocol {
-  implicit val atendeeFormat = jsonFormat3(Atendee.apply)
+object Attendee extends DefaultJsonProtocol {
+  implicit val attendeeFormat = jsonFormat3(Attendee.apply)
 }

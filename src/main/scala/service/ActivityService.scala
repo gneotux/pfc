@@ -17,7 +17,7 @@ import scala.util.control.Exception
 trait ActivityService {
 
   def activityDao: ActivityDao
-  def atendeeDao: AtendeeDao
+  def attendeeDao: AttendeeDao
   def speakerDao: SpeakerDao
   def userDao: UserDao
   def activityTagDao: ActivityTagDao
@@ -26,17 +26,17 @@ trait ActivityService {
 
   def add(activity: ActivityDto): Future[Option[Activity]]
 
-  def addAtendee(activityId: Int, userId: Int): Future[Option[Atendee]]
+  def addAttendee(activityId: Int, userId: Int): Future[Option[Attendee]]
 
   def addSpeaker(activityId: Int, userId: Int): Future[Option[Speaker]]
 
   def getAll(): Future[Seq[Activity]]
 
-  def getAllAtendees(activityId: Int): Future[Seq[User]]
+  def getAllAttendees(activityId: Int): Future[Seq[User]]
 
   def getAllSpeakers(activityId: Int): Future[Seq[User]]
 
-  def deleteAtendee(activityId: Int, userId: Int): Future[Int]
+  def deleteAttendee(activityId: Int, userId: Int): Future[Int]
 
   def deleteSpeaker(activityId: Int, userId: Int): Future[Int]
 
@@ -68,7 +68,7 @@ trait ActivityService {
 object ActivityService extends ActivityService {
 
   override val activityDao = ActivityDao
-  override val atendeeDao = AtendeeDao
+  override val attendeeDao = AttendeeDao
   override val speakerDao = SpeakerDao
   override val userDao = UserDao
   override val activityTagDao = ActivityTagDao
@@ -82,14 +82,14 @@ object ActivityService extends ActivityService {
     } yield activity
   }
 
-  override def addAtendee(activityId: Int, userId: Int): Future[Option[Atendee]] = db.run {
+  override def addAttendee(activityId: Int, userId: Int): Future[Option[Attendee]] = db.run {
     for {
       activity <- activityDao.get(activityId)
 //      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
       user <- userDao.get(userId)
 //      _ = if (user.isEmpty) throw new NoSuchElementException(s"Atendee with userId: ${userId} not found")
-      attendeeId <- atendeeDao.add(Atendee(0,userId,activityId))
-      atendee <- atendeeDao.get(attendeeId)
+      attendeeId <- attendeeDao.add(Attendee(0,userId,activityId))
+      atendee <- attendeeDao.get(attendeeId)
     } yield atendee
   }
 
@@ -104,8 +104,8 @@ object ActivityService extends ActivityService {
     } yield speaker
   }
 
-  override def deleteAtendee(activityId: Int, userId: Int): Future[Int] = db.run {
-    atendeeDao.deleteByUserAndActivityId(userId, activityId)
+  override def deleteAttendee(activityId: Int, userId: Int): Future[Int] = db.run {
+    attendeeDao.deleteByUserAndActivityId(userId, activityId)
   }
 
   override def deleteSpeaker(activityId: Int, userId: Int): Future[Int] = db.run {
@@ -116,8 +116,8 @@ object ActivityService extends ActivityService {
     activityDao.getAll
   }
 
-  override def getAllAtendees(activityId: Int): Future[Seq[User]] = db.run{
-    atendeeDao.getUsersByActivityId(activityId)
+  override def getAllAttendees(activityId: Int): Future[Seq[User]] = db.run{
+    attendeeDao.getUsersByActivityId(activityId)
   }
 
   override def getAllSpeakers(activityId: Int): Future[Seq[User]] = db.run{

@@ -78,24 +78,24 @@ class ActivityIntegrationSpec extends Specification with Specs2RouteTest with Ac
   }
 
   "Activities Endpoint#atendees" should {
-    "return a list of atendees for GET requests to activities/atendees path" in this {
-      Get("/activities/1/atendees") ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
+    "return a list of attendees for GET requests to activities/attendees path" in this {
+      Get("/activities/1/attendees") ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
         responseAs[Seq[User]] === DatabaseSupportSpec.users.filter(_.id == 2)
       }
     }
 
-    "return the id for DELETE requests to activities/atendees path" in this {
-      Delete("/activities/1/atendees/2") ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
+    "return the id for DELETE requests to activities/attendees path" in this {
+      Delete("/activities/1/attendees/2") ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
         status mustEqual StatusCodes.OK
-        val result: Seq[Atendee] = Await.result(db.run{AtendeeDao.getAll}, Duration.Inf)
-        result mustEqual DatabaseSupportSpec.atendees.filterNot(a => a.userId == 2 && a.activityId == 1)
+        val result: Seq[Attendee] = Await.result(db.run{AttendeeDao.getAll}, Duration.Inf)
+        result mustEqual DatabaseSupportSpec.attendees.filterNot(a => a.userId == 2 && a.activityId == 1)
       }
     }
 
-    "return the correct atendee for POST requests to activities/atendee path" in this {
-      Post("/activities/1/atendees/3") ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
+    "return the correct attendee for POST requests to activities/atendee path" in this {
+      Post("/activities/1/attendees/3") ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
         status mustEqual StatusCodes.Created
-        responseAs[Atendee] ===  Atendee(2, 3, 1)
+        responseAs[Attendee] ===  Attendee(2, 3, 1)
       }
     }
   }
