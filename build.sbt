@@ -20,9 +20,9 @@ libraryDependencies ++= {
     "io.spray"             %%   "spray-testkit"     % sprayVersion  % Test excludeAll(ExclusionRule("org.specs2")),
     "com.typesafe.akka"    %%   "akka-testkit"      % akkaVersion   % Test excludeAll(ExclusionRule("org.specs2")),
     "org.scalatest"        %%   "scalatest"         % "2.2.1"       % Test excludeAll(ExclusionRule("org.specs2")),
-    "org.specs2"           %%   "specs2-core"       % "2.3.13-scalaz-7.1.0-RC1" % "test",
-    "org.specs2"           %%   "specs2-junit"      % "2.3.13-scalaz-7.1.0-RC1" % "test",
-    "org.specs2"           %%   "specs2-mock"       % "2.3.13-scalaz-7.1.0-RC1" % "test",
+    "org.specs2"           %%   "specs2-core"       % "2.3.13-scalaz-7.1.0-RC1" % Test,
+    "org.specs2"           %%   "specs2-junit"      % "2.3.13-scalaz-7.1.0-RC1" % Test,
+    "org.specs2"           %%   "specs2-mock"       % "2.3.13-scalaz-7.1.0-RC1" % Test,
     "org.scalaz"           %%   "scalaz-core"       % "7.1.0",
     "com.typesafe.akka"    %%   "akka-actor"        % akkaVersion,
     "com.typesafe.slick"   %%   "slick"             % "3.0.0",
@@ -40,6 +40,7 @@ libraryDependencies ++= {
     "com.typesafe"          %   "config"            % "1.2.1"
   )
 }
+
 
 fork in Test := false
 

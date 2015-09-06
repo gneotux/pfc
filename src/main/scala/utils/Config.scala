@@ -24,5 +24,6 @@ object Config {
     val user = dbConfig.getString("user")
     val password = dbConfig.getString("password")
     val driver = dbConfig.getString("driver")
+    val test = dbConfig.getBoolean("test")
   }
 }
