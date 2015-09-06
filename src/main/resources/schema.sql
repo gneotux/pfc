@@ -68,6 +68,7 @@ create table "activityTypes"
 
 create table "companies"
 ("id" SERIAL NOT NULL PRIMARY KEY,
+"name" VARCHAR(254) NOT NULL,
 "email" VARCHAR(254) NOT NULL,
 "phone" VARCHAR(254) NOT NULL,
 "description" VARCHAR(254),
