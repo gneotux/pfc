@@ -11,7 +11,7 @@ object Config {
 
     val systemName = appConf.getString("systemName")
     val interface = appConf.getString("interface")
-    val port = appConf.getInt("port")
+    val port = appConf.getString("port")
     val userServiceName = appConf.getString("userServiceName")
 
   }
