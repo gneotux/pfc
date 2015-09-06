@@ -44,4 +44,15 @@ trait EventDayRouterDoc {
   ))
   def postRouteEventDay: Route
 
+  @ApiOperation(value = "Update an eventday ", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "eventdayId", value="ID of the eventday that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="Event day object to be updated", required = true, dataType = "router.dto.EventDayDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid event day"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteEventDay: Route
+
 }

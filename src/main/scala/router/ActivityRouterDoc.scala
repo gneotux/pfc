@@ -35,6 +35,16 @@ trait ActivityRouterDoc {
   ))
   def deleteRouteActivity: Route
 
+  @ApiOperation(value = "Update an activity ", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityId", value="ID of the activity that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="Activity object to be updated", required = true, dataType = "router.dto.ActivityDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid activity"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteActivity: Route
 
   @ApiOperation(value = "Add a new activity to the system", httpMethod = "POST", consumes="application/json")
   @ApiImplicitParams(Array(

@@ -14,7 +14,7 @@ trait TagDao {
 
   def get(id: Int): DBIO[Option[EventTag]]
 
-  def add(tag: EventTag): DBIO[Int]
+  def add(tag: EventTag): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -42,8 +42,8 @@ trait TagDaoSlickImpl extends TagDao {
 
   override def get(id: Int): DBIO[Option[EventTag]] = tags.filter(_.id === id).result.headOption
 
-  override def add(tag: EventTag): DBIO[Int] = {
-    (tags returning tags.map(_.id)) += tag
+  override def add(tag: EventTag): DBIO[Option[Int]] = {
+    (tags returning tags.map(_.id)) insertOrUpdate  tag
   }
 
   override def delete(id: Int): DBIO[Int] = tags.filter(_.id === id).delete

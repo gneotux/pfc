@@ -44,4 +44,15 @@ trait LocationRouterDoc {
   ))
   def postRouteLocation: Route
 
+  @ApiOperation(value = "Update a location", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "locationId", value="ID of the location that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="Location object to be updated", required = true, dataType = "router.dto.LocationDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid location"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteLocation: Route
+
 }

@@ -18,7 +18,7 @@ trait LocationRouter extends HttpService with LocationRouterDoc {
 
   val locationService: LocationService
 
-  val locationOperations: Route = postRouteLocation ~ readRouteLocation ~ readAllRouteLocation ~ deleteRouteLocation
+  val locationOperations: Route = postRouteLocation ~ readRouteLocation ~ readAllRouteLocation ~ deleteRouteLocation ~ updateRouteLocation
 
   override def readRouteLocation = path("locations" / IntNumber) { locationId =>
     get {
@@ -62,6 +62,24 @@ trait LocationRouter extends HttpService with LocationRouterDoc {
     }
   }
 
+  override def updateRouteLocation: Route = path("locations" / IntNumber) { locationId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[LocationDto]) { location =>
+            respondWithMediaType(`application/json`) {
+              onComplete(locationService.update(locationId, location)) {
+                case Success(Some(newLocation)) => complete(OK, newLocation)
+                case Success(None) => complete(NotAcceptable, "Invalid location")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   override def postRouteLocation: Route = path("locations") {
     post {
       authenticate(basicUserAuthenticator) { authInfo =>
@@ -79,5 +97,6 @@ trait LocationRouter extends HttpService with LocationRouterDoc {
       }
     }
   }
+
 
 }

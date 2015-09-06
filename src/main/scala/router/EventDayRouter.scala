@@ -18,7 +18,7 @@ trait EventDayRouter extends HttpService with EventDayRouterDoc {
 
   val eventDayService: EventDayService
 
-  val eventDayOperations: Route = postRouteEventDay ~ readRouteEventDay ~ readAllRouteEventDay ~ deleteRouteEventDay
+  val eventDayOperations: Route = postRouteEventDay ~ readRouteEventDay ~ readAllRouteEventDay ~ deleteRouteEventDay ~ updateRouteEventDay
 
   override def readRouteEventDay = path("eventdays" / IntNumber) { eventDayId =>
     get {
@@ -70,6 +70,24 @@ trait EventDayRouter extends HttpService with EventDayRouterDoc {
             respondWithMediaType(`application/json`) {
               onComplete(eventDayService.add(eventDay)) {
                 case Success(Some(newEventDay)) => complete(Created, newEventDay)
+                case Success(None) => complete(NotAcceptable, "Invalid eventDay")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def updateRouteEventDay: Route = path("eventdays" / IntNumber) { eventDayId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[EventDayDto]) { eventDay =>
+            respondWithMediaType(`application/json`) {
+              onComplete(eventDayService.update(eventDayId, eventDay)) {
+                case Success(Some(newEventDay)) => complete(OK, newEventDay)
                 case Success(None) => complete(NotAcceptable, "Invalid eventDay")
                 case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
               }

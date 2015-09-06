@@ -18,7 +18,7 @@ trait TagRouter extends HttpService with TagRouterDoc {
 
   val tagService: TagService
 
-  val tagOperations: Route = postRouteTag ~ readRouteTag ~ readAllRouteTag ~ deleteRouteTag
+  val tagOperations: Route = postRouteTag ~ readRouteTag ~ readAllRouteTag ~ deleteRouteTag ~ updateRouteTag
 
   override def readRouteTag = path("tags" / IntNumber) { tagId =>
     get {
@@ -55,6 +55,24 @@ trait TagRouter extends HttpService with TagRouterDoc {
             onComplete(tagService.delete(tagId)) {
               case Success(ok) => complete(OK)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def updateRouteTag: Route = path("tags" / IntNumber) { tagId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[TagDto]) { tag =>
+            respondWithMediaType(`application/json`) {
+              onComplete(tagService.update(tagId, tag)) {
+                case Success(Some(newTag)) => complete(OK, newTag)
+                case Success(None) => complete(NotAcceptable, "Invalid tag")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }

@@ -7,6 +7,9 @@ import utils.DatabaseConfig._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scalaz.OptionT
+import scalaz.OptionT._
+import scalaz.std.scalaFuture._
 
 
 trait UserService {
@@ -24,6 +27,8 @@ trait UserService {
   def get(email: String): Future[Option[(User, UserPassword)]]
 
   def delete(id: Int):Future[Int]
+
+  def update(id: Int, userDto: UserDto): Future[Option[User]]
 
   def populateUser: UserDto => User = (userDto: UserDto) =>
     User(
@@ -51,7 +56,7 @@ object UserService extends UserService {
       // "This DBMS allows only a single AutoInc"
       // H2 doesn't allow return the whole user once created so we have to do this instead of returning the object from
       // the dao on inserting
-      user <- UserDao.get(userId)
+      user <- UserDao.get(userId.getOrElse(-1))
     } yield user
   }
 
@@ -69,5 +74,19 @@ object UserService extends UserService {
 
   override def delete(id: Int):Future[Int] = db.run {
     userDao.delete(id)
+  }
+
+  override def update(id: Int, userDto: UserDto): Future[Option[User]] = {
+
+    val toUpdate = populateUser(userDto).copy(id = id)
+
+    val result = for {
+      p <- optionT(db.run(userDao.get(id)))
+      newPasswordId <- optionT(db.run(passwordDao.add(UserPassword newWithPassword userDto.password)).map(Option.apply))
+      resultUpdate <- optionT(db.run(userDao.add(toUpdate.copy(passwordId = Option(newPasswordId)))).map(Option.apply))
+      updated <- optionT(db.run(userDao.get(id)))
+    } yield updated
+
+    result.run
   }
 }

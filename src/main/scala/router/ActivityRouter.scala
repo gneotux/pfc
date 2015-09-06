@@ -23,6 +23,7 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
     readRouteActivity ~
     readAllRouteActivity ~
     deleteRouteActivity ~
+    updateRouteActivity ~
     readAllAttendeesInActivity ~
     readAllSpeakersInActivity ~
     postRouteActivityAttendee ~
@@ -69,6 +70,24 @@ trait ActivityRouter extends HttpService with ActivityRouterDoc {
             onComplete(activityService.delete(activityId)) {
               case Success(activityId: Int) => complete(OK, activityId.toString)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def updateRouteActivity: Route = path("activities" / IntNumber) { activityId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[ActivityDto]) { activity =>
+            respondWithMediaType(`application/json`) {
+              onComplete(activityService.update(activityId, activity)) {
+                case Success(Some(newActivity)) => complete(OK, newActivity)
+                case Success(None) => complete(NotAcceptable, "Invalid activity")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }

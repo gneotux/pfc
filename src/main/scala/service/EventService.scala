@@ -7,6 +7,9 @@ import utils.DatabaseConfig._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scalaz.OptionT
+import scalaz.OptionT._
+import scalaz.std.scalaFuture._
 
 /**
  * Created by gneotux on 17/07/15.
@@ -26,6 +29,8 @@ trait EventService {
   def get(id: Int): Future[Option[Event]]
 
   def delete(id: Int): Future[Int]
+
+  def update(id: Int, eventDto: EventDto): Future[Option[Event]]
 
   def getAllSponsorsByEventId(eventId : Int): Future[Seq[Company]]
 
@@ -54,7 +59,7 @@ object EventService extends EventService {
   override def add(event: EventDto): Future[Option[Event]] = db.run {
     for {
       eventId <- eventDao.add(populateEvent(event))
-      event <- EventDao.get(eventId)
+      event <- EventDao.get(eventId.getOrElse(-1))
     } yield event
   }
 
@@ -88,5 +93,18 @@ object EventService extends EventService {
 
   override def deleteSponsor(eventId: Int, companyId: Int): Future[Int] = db.run {
     sponsorDao.deleteByEventIdAndCompanyId(eventId, companyId)
+  }
+
+  override def update(id: Int, eventDto: EventDto): Future[Option[Event]] = {
+
+    val toUpdate = populateEvent(eventDto).copy(id = id)
+
+    val result = for {
+      p <- optionT(db.run(eventDao.get(id)))
+      resultUpdate <- optionT(db.run(eventDao.add(toUpdate)).map(Option.apply))
+      updated <- optionT(db.run(eventDao.get(id)))
+    } yield updated
+
+    result.run
   }
 }

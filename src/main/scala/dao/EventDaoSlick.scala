@@ -15,7 +15,7 @@ trait EventDao {
 
   def get(id: Int): DBIO[Option[Event]]
 
-  def add(event: Event): DBIO[Int]
+  def add(event: Event): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -47,8 +47,8 @@ trait EventDaoSlickImpl extends EventDao {
 
   override def get(id: Int): DBIO[Option[Event]] = events.filter(_.id === id).result.headOption
 
-  override def add(event: Event): DBIO[Int] = {
-    (events returning events.map(_.id)) += event
+  override def add(event: Event): DBIO[Option[Int]] = {
+    (events returning events.map(_.id)) insertOrUpdate  event
   }
 
   override def delete(id: Int): DBIO[Int] = events.filter(_.id === id).delete

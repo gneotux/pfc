@@ -12,7 +12,7 @@ trait CompanyDao {
 
   def get(id: Int): DBIO[Option[Company]]
 
-  def add(user: Company): DBIO[Int]
+  def add(user: Company): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -46,8 +46,8 @@ trait CompanyDaoSlickImpl extends CompanyDao {
 
   override def get(id: Int): DBIO[Option[Company]] = companies.filter(_.id === id).result.headOption
 
-  override def add(user: Company): DBIO[Int] = {
-    (companies returning companies.map(_.id)) += user
+  override def add(user: Company): DBIO[Option[Int]] = {
+    (companies returning companies.map(_.id)) insertOrUpdate  user
   }
 
   override def delete(id: Int): DBIO[Int] = companies.filter(_.id === id).delete

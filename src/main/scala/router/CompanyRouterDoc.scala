@@ -42,4 +42,15 @@ trait CompanyRouterDoc {
   ))
   def postRouteCompany: Route
 
+  @ApiOperation(value = "Update the company", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "companyId", value="ID of the company that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="Company object to be updated", required = true, dataType = "router.dto.CompanyDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid company"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteCompany: Route
+
 }

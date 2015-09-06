@@ -23,6 +23,7 @@ trait EventRouter extends HttpService with EventRouterDoc {
     readRouteEvent ~
     readAllRouteEvent ~
     deleteRouteEvent ~
+    updateRouteEvent ~
     readAllSponsorsInEvent ~
     postRouteEventSponsor ~
     deleteRouteEventSponsor
@@ -62,6 +63,24 @@ trait EventRouter extends HttpService with EventRouterDoc {
             onComplete(eventService.delete(eventId)) {
               case Success(ok) => complete(OK)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def updateRouteEvent: Route = path("events" / IntNumber) { eventId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[EventDto]) { event =>
+            respondWithMediaType(`application/json`) {
+              onComplete(eventService.update(eventId, event)) {
+                case Success(Some(newEvent)) => complete(Created, newEvent)
+                case Success(None) => complete(NotAcceptable, "Invalid event")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }
@@ -114,6 +133,8 @@ trait EventRouter extends HttpService with EventRouterDoc {
       }
     }
   }
+
+
 
   override def deleteRouteEventSponsor: Route = path("events" / IntNumber / "sponsors" / IntNumber) { (eventId, companyId) =>
     delete {

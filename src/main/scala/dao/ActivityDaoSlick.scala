@@ -6,6 +6,7 @@ import utils.DatabaseConfig.profile.api._
 import com.github.tototoshi.slick.JdbcJodaSupport._
 
 
+
 /**
  * Created by gneotux on 16/07/15.
  */
@@ -17,7 +18,7 @@ trait ActivityDao {
 
   def get(id: Int): DBIO[Option[Activity]]
 
-  def add(user: Activity): DBIO[Int]
+  def add(activity: Activity): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -57,11 +58,12 @@ trait ActivityDaoSlickImpl extends ActivityDao {
 
   override def get(id: Int): DBIO[Option[Activity]] = activities.filter(_.id === id).result.headOption
 
-  override def add(activity: Activity): DBIO[Int] = {
-    (activities returning activities.map(_.id)) += activity
+  override def add(activity: Activity): DBIO[Option[Int]] = {
+    (activities returning activities.map(_.id)) insertOrUpdate activity
   }
 
   override def delete(id: Int): DBIO[Int] = activities.filter(_.id === id).delete
+
 }
 
 object ActivityDao extends ActivityDaoSlickImpl

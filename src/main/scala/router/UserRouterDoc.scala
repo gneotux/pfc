@@ -42,4 +42,15 @@ trait UserRouterDoc {
     ))
     def postRouteUser: Route
 
+    @ApiOperation(value = "Update a user", httpMethod = "PUT", consumes="application/json")
+    @ApiImplicitParams(Array(
+     new ApiImplicitParam(name = "userId", value="ID of the user that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+     new ApiImplicitParam(name = "body", value="User object to be updated", required = true, dataType = "router.dto.UserDto", paramType = "body" )
+    ))
+    @ApiResponses(Array(
+      new ApiResponse(code = 405, message = "Invalid user"),
+      new ApiResponse(code = 200, message = "Entity Updated")
+    ))
+    def updateRouteUser: Route
+
 }

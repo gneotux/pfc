@@ -15,7 +15,7 @@ trait UserDao {
 
   def get(email: String): DBIO[Option[(User, UserPassword)]]
 
-  def add(user: User): DBIO[Int]
+  def add(user: User): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -59,8 +59,8 @@ trait UserDaoSlickImpl extends UserDao {
       password <- PasswordDao.passwords.filter(_.id === user.id)
     } yield (user, password)).result.headOption
 
-  override def add(user: User): DBIO[Int] = {
-    (users returning users.map(_.id)) += user
+  override def add(user: User): DBIO[Option[Int]] = {
+    (users returning users.map(_.id)) insertOrUpdate  user
   }
 
   override def delete(id: Int): DBIO[Int] = users.filter(_.id === id).delete

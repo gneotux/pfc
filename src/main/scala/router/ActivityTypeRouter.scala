@@ -18,7 +18,7 @@ trait ActivityTypeRouter extends HttpService with ActivityTypeRouterDoc {
 
   val activityTypeService: ActivityTypeService
 
-  val activityTypeOperations: Route = postRouteActivityType ~ readRouteActivityType ~ readAllRouteActivityType ~ deleteRouteActivityType
+  val activityTypeOperations: Route = postRouteActivityType ~ readRouteActivityType ~ readAllRouteActivityType ~ deleteRouteActivityType ~ updateRouteActivityType
 
   override def readRouteActivityType = path("activitytypes" / IntNumber) { activityTypeId =>
     get {
@@ -55,6 +55,24 @@ trait ActivityTypeRouter extends HttpService with ActivityTypeRouterDoc {
             onComplete(activityTypeService.delete(activityTypeId)) {
               case Success(ok) => complete(OK)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def updateRouteActivityType: Route = path("activitytypes"/ IntNumber) { activityTypeId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[ActivityTypeDto]) { activityType =>
+            respondWithMediaType(`application/json`) {
+              onComplete(activityTypeService.update(activityTypeId, activityType)) {
+                case Success(Some(newActivityType)) => complete(OK, newActivityType)
+                case Success(None) => complete(NotAcceptable, "Invalid activityType")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }

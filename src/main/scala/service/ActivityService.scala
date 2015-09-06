@@ -1,15 +1,16 @@
 package service
 
-import java.util.NoSuchElementException
-
 import dao._
 import model._
+import org.joda.time.DateTime
 import router.dto.ActivityDto
 import utils.DatabaseConfig._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.control.Exception
+import scalaz.OptionT
+import scalaz.OptionT._
+import scalaz.std.scalaFuture._
 
 /**
  * Created by gneotux on 17/07/15.
@@ -43,6 +44,8 @@ trait ActivityService {
   def get(id: Int): Future[Option[Activity]]
 
   def delete(id: Int): Future[Int]
+
+  def update(id: Int, activityDto: ActivityDto): Future[Option[Activity]]
 
   def getAllTags(activityId: Int): Future[Seq[Tag]]
 
@@ -78,30 +81,30 @@ object ActivityService extends ActivityService {
   override def add(activity: ActivityDto): Future[Option[Activity]] = db.run {
     for {
       activityId <- activityDao.add(populateActivity(activity))
-      activity <- ActivityDao.get(activityId)
+      activity <- ActivityDao.get(activityId.getOrElse(-1))
     } yield activity
   }
 
-  override def addAttendee(activityId: Int, userId: Int): Future[Option[Attendee]] = db.run {
-    for {
-      activity <- activityDao.get(activityId)
+  override def addAttendee(activityId: Int, userId: Int): Future[Option[Attendee]] = {
+    (for {
+      activity <- optionT(db.run(activityDao.get(activityId)))
 //      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
-      user <- userDao.get(userId)
+      user <- optionT(db.run(userDao.get(userId)))
 //      _ = if (user.isEmpty) throw new NoSuchElementException(s"Atendee with userId: ${userId} not found")
-      attendeeId <- attendeeDao.add(Attendee(0,userId,activityId))
-      atendee <- attendeeDao.get(attendeeId)
-    } yield atendee
+      attendeeId <- optionT(db.run(attendeeDao.add(Attendee(0,userId,activityId))).map(Option.apply))
+      attendee <- optionT(db.run(attendeeDao.get(attendeeId)))
+    } yield attendee).run
   }
 
-  override def addSpeaker(activityId: Int, userId: Int): Future[Option[Speaker]] = db.run {
-    for {
-      activity <- activityDao.get(activityId)
+  override def addSpeaker(activityId: Int, userId: Int): Future[Option[Speaker]] = {
+    (for {
+      activity <- optionT(db.run(activityDao.get(activityId)))
 //      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
-      user <- userDao.get(userId)
+      user <- optionT(db.run(userDao.get(userId)))
 //      _ = if (user.isEmpty) throw new NoSuchElementException(s"Speaker with userId: ${userId} not found")
-      attendeeId <- speakerDao.add(Speaker(0,userId,activityId))
-      speaker <- speakerDao.get(attendeeId)
-    } yield speaker
+      attendeeId <- optionT(db.run(speakerDao.add(Speaker(0,userId,activityId)).map(Option.apply)))
+      speaker <- optionT(db.run(speakerDao.get(attendeeId)))
+    } yield speaker).run
   }
 
   override def deleteAttendee(activityId: Int, userId: Int): Future[Int] = db.run {
@@ -132,20 +135,33 @@ object ActivityService extends ActivityService {
     activityDao.delete(id)
   }
 
+  override def update(id: Int, activityDto: ActivityDto): Future[Option[Activity]] = {
+
+    val toUpdate = populateActivity(activityDto).copy(id = id)
+
+    val result = for {
+      p <- optionT(db.run(activityDao.get(id)))
+      resultUpdate <- optionT(db.run(activityDao.add(toUpdate)))
+      updated <- optionT(db.run(activityDao.get(id)))
+    } yield updated
+
+    result.run
+  }
+
   override def getAllTags(activityId: Int): Future[Seq[Tag]] = db.run{
     activityTagDao.getTagsByActivityId(activityId)
   }
 
 
-  override def addTag(activityId: Int, tagId: Int): Future[Option[ActivityTag]] = db.run {
-    for {
-      activity <- activityDao.get(activityId)
+  override def addTag(activityId: Int, tagId: Int): Future[Option[ActivityTag]] = {
+    (for {
+      activity <- optionT(db.run(activityDao.get(activityId)))
       //      _ = if (activity.isEmpty) throw new NoSuchElementException(s"Activity not found with activityId: ${activityId}")
-      tag <- tagDao.get(tagId)
+      tag <- optionT(db.run(tagDao.get(tagId)))
       //      _ = if (user.isEmpty) throw new NoSuchElementException(s"Speaker with userId: ${userId} not found")
-      activityTagId <- activityTagDao.add(ActivityTag(0,tagId,activityId))
-      activityTag <- activityTagDao.get(activityTagId)
-    } yield activityTag
+      activityTagId <- optionT(db.run(activityTagDao.add(ActivityTag(0,tagId,activityId)).map(Option.apply)))
+      activityTag <- optionT(db.run(activityTagDao.get(activityTagId)))
+    } yield activityTag).run
   }
 
   override def deleteTag(activityId: Int, tagId: Int): Future[Int] = db.run {

@@ -16,7 +16,7 @@ trait CompanyRouter extends HttpService with CompanyRouterDoc {
 
   val companyService: CompanyService
 
-  val companyOperations: Route = postRouteCompany ~ readRouteCompany ~ readAllRouteCompany ~ deleteRouteCompany
+  val companyOperations: Route = postRouteCompany ~ readRouteCompany ~ readAllRouteCompany ~ deleteRouteCompany ~ updateRouteCompany
 
   override def readRouteCompany = path("companies" / IntNumber) { companyId =>
     get {
@@ -53,6 +53,24 @@ trait CompanyRouter extends HttpService with CompanyRouterDoc {
             onComplete(companyService.delete(companyId)) {
               case Success(ok) => complete(OK)
               case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  override def updateRouteCompany: Route = path("companies" / IntNumber) { companyId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[CompanyDto]) { company =>
+            respondWithMediaType(`application/json`) {
+              onComplete(companyService.update(companyId, company)) {
+                case Success(Some(newCompany)) => complete(OK, newCompany)
+                case Success(None) => complete(NotAcceptable, "Invalid company")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
             }
           }
         }

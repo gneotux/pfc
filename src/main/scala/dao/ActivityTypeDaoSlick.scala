@@ -19,7 +19,7 @@ trait ActivityTypeDao {
 
   def get(id: Int): DBIO[Option[ActivityType]]
 
-  def add(activityType: ActivityType): DBIO[Int]
+  def add(activityType: ActivityType): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -43,8 +43,8 @@ trait ActivityTypeDaoSlickImpl extends ActivityTypeDao {
 
   override def get(id: Int): DBIO[Option[ActivityType]] = activityTypes.filter(_.id === id).result.headOption
 
-  override def add(activityType: ActivityType): DBIO[Int] = {
-    (activityTypes returning activityTypes.map(_.id)) += activityType
+  override def add(activityType: ActivityType): DBIO[Option[Int]] = {
+    (activityTypes returning activityTypes.map(_.id)) insertOrUpdate activityType
   }
 
   override def delete(id: Int): DBIO[Int] = activityTypes.filter(_.id === id).delete

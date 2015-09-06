@@ -14,7 +14,7 @@ trait LocationDao {
 
   def get(id: Int): DBIO[Option[Location]]
 
-  def add(location: Location): DBIO[Int]
+  def add(location: Location): DBIO[Option[Int]]
 
   def delete(id: Int): DBIO[Int]
 }
@@ -50,8 +50,8 @@ trait LocationDaoSlickImpl extends LocationDao {
 
   override def get(id: Int): DBIO[Option[Location]] = locations.filter(_.id === id).result.headOption
 
-  override def add(location: Location): DBIO[Int] = {
-    (locations returning locations.map(_.id)) += location
+  override def add(location: Location): DBIO[Option[Int]] = {
+    (locations returning locations.map(_.id)) insertOrUpdate location
   }
 
   override def delete(id: Int): DBIO[Int] = locations.filter(_.id === id).delete

@@ -7,6 +7,9 @@ import utils.DatabaseConfig._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scalaz.OptionT
+import scalaz.OptionT._
+import scalaz.std.scalaFuture._
 
 
 trait CompanyService {
@@ -20,6 +23,8 @@ trait CompanyService {
   def get(id: Int): Future[Option[Company]]
   
   def delete(id: Int):Future[Int]
+
+  def update(id: Int, companyDto: CompanyDto): Future[Option[Company]]
 
   def populateCompany: CompanyDto => Company = (companyDto: CompanyDto) =>
     Company(
@@ -40,7 +45,7 @@ object CompanyService extends CompanyService {
   override def add(company: CompanyDto): Future[Option[Company]] = db.run {
     for {
       companyId <- companyDao.add(populateCompany(company))
-      company <- CompanyDao.get(companyId)
+      company <- companyDao.get(companyId.getOrElse(-1))
     } yield company
   }
 
@@ -54,5 +59,18 @@ object CompanyService extends CompanyService {
 
   override def delete(id: Int):Future[Int] = db.run {
     companyDao.delete(id)
+  }
+
+  override def update(id: Int, companyDto: CompanyDto): Future[Option[Company]] = {
+
+    val toUpdate = populateCompany(companyDto).copy(id = id)
+
+    val result = for {
+      p <- optionT(db.run(companyDao.get(id)))
+      resultUpdate <- optionT(db.run(companyDao.add(toUpdate)).map(Option.apply))
+      updated <- optionT(db.run(companyDao.get(id)))
+    } yield updated
+
+    result.run
   }
 }

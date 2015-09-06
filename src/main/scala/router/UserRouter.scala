@@ -16,7 +16,7 @@ trait UserRouter extends HttpService with UserRouterDoc {
 
   val userService: UserService
 
-  val userOperations: Route = postRouteUser ~ readRouteUser ~ readAllRouteUser ~ deleteRouteUser
+  val userOperations: Route = postRouteUser ~ readRouteUser ~ readAllRouteUser ~ deleteRouteUser ~ updateRouteUser
 
   override def readRouteUser = path("users" / IntNumber) { userId =>
       get {
@@ -59,6 +59,24 @@ trait UserRouter extends HttpService with UserRouterDoc {
         }
       }
     }
+
+  override def updateRouteUser: Route = path("users" / IntNumber) { userId =>
+    put {
+      authenticate(basicUserAuthenticator) { authInfo =>
+        authorize(authInfo.hasPermissions("ADMIN")) {
+          entity(as[UserDto]) { user =>
+            respondWithMediaType(`application/json`) {
+              onComplete(userService.update(userId, user)) {
+                case Success(Some(newUser)) => complete(OK, newUser)
+                case Success(None) => complete(NotAcceptable, "Invalid user")
+                case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   override def postRouteUser: Route = path("users") {
       post {

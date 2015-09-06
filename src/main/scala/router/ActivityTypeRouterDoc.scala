@@ -9,7 +9,7 @@ import spray.routing._
 /**
  * Created by gneotux on 21/07/15.
  */
-@Api(value = "/activityTypes", description = "Operations for activityTypes.", consumes= "application/json",  produces = "application/json")
+@Api(value = "/activitytypes", description = "Operations for activityTypes.", consumes= "application/json",  produces = "application/json")
 trait ActivityTypeRouterDoc {
 
   @ApiOperation(value = "Get a activityType by id", httpMethod = "GET", response = classOf[ActivityType])
@@ -34,6 +34,17 @@ trait ActivityTypeRouterDoc {
     new ApiResponse(code = 400, message = "Invalid ID supplied")
   ))
   def deleteRouteActivityType: Route
+
+  @ApiOperation(value = "Update an activityType ", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "activityTypeId", value="ID of the activityType that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="ActivityType object to be updated", required = true, dataType = "router.dto.ActivityTypeDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid activity"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteActivityType: Route
 
   @ApiOperation(value = "Add a new activityType to the system", httpMethod = "POST", consumes="application/json")
   @ApiImplicitParams(Array(

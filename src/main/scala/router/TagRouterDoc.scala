@@ -42,4 +42,15 @@ trait TagRouterDoc {
   ))
   def postRouteTag: Route
 
+  @ApiOperation(value = "Update a tag", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "tagId", value="ID of the tag that needs to be deleted", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="Tag object to be updated", required = true, dataType = "router.dto.TagDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid tag"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteTag: Route
+
 }

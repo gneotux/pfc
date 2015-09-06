@@ -46,6 +46,17 @@ trait EventRouterDoc {
   ))
   def postRouteEvent: Route
 
+  @ApiOperation(value = "Update event", httpMethod = "PUT", consumes="application/json")
+  @ApiImplicitParams(Array(
+    new ApiImplicitParam(name = "eventId", value="ID of the event that needs to be updated", required = true, dataType = "integer", paramType = "path" ),
+    new ApiImplicitParam(name = "body", value="Event object to be updated", required = true, dataType = "router.dto.EventDto", paramType = "body" )
+  ))
+  @ApiResponses(Array(
+    new ApiResponse(code = 405, message = "Invalid event"),
+    new ApiResponse(code = 200, message = "Entity Updated")
+  ))
+  def updateRouteEvent: Route
+
   @ApiOperation(value = "Get all the sponsors in a event by eventId", httpMethod = "GET", responseContainer = "List", response = classOf[Company])
   @Path("/{eventId}/sponsors")
   @ApiImplicitParams(Array(
@@ -80,5 +91,7 @@ trait EventRouterDoc {
     new ApiResponse(code = 400, message = "Invalid ID supplied")
   ))
   def deleteRouteEventSponsor: Route
+
+
 
 }
