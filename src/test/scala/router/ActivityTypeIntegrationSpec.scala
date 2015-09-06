@@ -64,6 +64,14 @@ class ActivityTypeIntegrationSpec extends Specification with Specs2RouteTest wit
       }
     }
 
+//    "return the correct activityType for PUT requests to activityTypes path" in this {
+//      Put("/activitytypes/1", ActivityTypeDto("CHANGED")
+//      ) ~> addCredentials(userAdmin) ~> activityTypeOperations ~> check {
+//        status mustEqual StatusCodes.OK
+//        responseAs[ActivityType] ===  ActivityType(1, "CHANGED")
+//      }
+//    }.isPending
+
     //    "return not authorized for activityType without valid permission for DELETE requests to activityTypes path" in this {
     //      Delete("/activitytypes/1") ~> addCredentials(userNotAdmin) ~> activityTypeOperations ~> check {
     //        status mustEqual StatusCodes.InternalServerError

@@ -27,7 +27,7 @@ class TagIntegrationSpec extends Specification with Specs2RouteTest with TagRout
   val userAdmin = BasicHttpCredentials("test1@test.com", "password1")
   val userNotAdmin = BasicHttpCredentials("test2@test.com", "password1")
 
-  "Companies Endpoint" should {
+  "Tags Endpoint" should {
     "leave GET requests to other paths unhandled" in this {
       Get("/kermit") ~> addCredentials(userAdmin) ~> tagOperations ~>  check  {
         handled must beFalse
@@ -35,7 +35,7 @@ class TagIntegrationSpec extends Specification with Specs2RouteTest with TagRout
     }
   }
 
-  "Companies Endpoint#tags" should {
+  "Tags Endpoint#tags" should {
     "return a list of tags for GET requests to tags path" in this {
       Get("/tags") ~> addCredentials(userAdmin) ~> tagOperations ~> check {
         responseAs[Seq[Tag]] === DatabaseSupportSpec.tags
@@ -62,6 +62,15 @@ class TagIntegrationSpec extends Specification with Specs2RouteTest with TagRout
       ) ~> addCredentials(userAdmin) ~> tagOperations ~> check {
         status mustEqual StatusCodes.Created
         responseAs[Tag] ===  Tag(4, "super advanced users", Some("blood"), Some("SUPADVANCE"))
+      }
+    }
+
+    "return the correct tag for PUT requests to tags path" in this {
+      Put("/tags/1", TagDto("super 1", Some("blood"), Some("SUPADVANCE"))
+
+      ) ~> addCredentials(userAdmin) ~> tagOperations ~> check {
+        status mustEqual StatusCodes.OK
+        responseAs[Tag] ===  Tag(1, "super 1", Some("blood"), Some("SUPADVANCE"))
       }
     }
 

@@ -64,6 +64,14 @@ class CompanyIntegrationSpec extends Specification with Specs2RouteTest with Com
       }
     }
 
+    "return the correct company for POST requests to companies path" in this {
+      Put("/companies/1", CompanyDto("Hypercomplumeganet2", "emailofthenewcompany@Company")
+      ) ~> addCredentials(userAdmin) ~> companyOperations ~> check {
+        status mustEqual StatusCodes.OK
+        responseAs[Company] ===  Company(1, "Hypercomplumeganet2", "emailofthenewcompany@Company")
+      }
+    }
+
     //    "return not authorized for company without valid permission for DELETE requests to companies path" in this {
     //      Delete("/companies/1") ~> addCredentials(userNotAdmin) ~> companyOperations ~> check {
     //        status mustEqual StatusCodes.InternalServerError

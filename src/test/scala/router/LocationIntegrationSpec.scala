@@ -57,11 +57,16 @@ class LocationIntegrationSpec extends Specification with Specs2RouteTest with Lo
     }
 
     "return the correct location for POST requests to locations path" in this {
-      Post("/locations", LocationDto("Plaza toros leganes", Some("bull2"), 1231231111.22312D, 12312333123.123123D, 200, Some("Leganes space for acts"), Some("www.leganes.es"))
-
-      ) ~> addCredentials(userAdmin) ~> locationOperations ~> check {
+      Post("/locations", LocationDto("Plaza toros leganes", Some("bull2"), 1231231111.22312D, 12312333123.123123D, 200, Some("Leganes space for acts"), Some("www.leganes.es"))) ~> addCredentials(userAdmin) ~> locationOperations ~> check {
         status mustEqual StatusCodes.Created
         responseAs[Location] ===  Location(3,"Plaza toros leganes", Some("bull2"), 1231231111.22312D, 12312333123.123123D, 200, Some("Leganes space for acts"), Some("www.leganes.es"))
+      }
+    }
+
+    "return the correct location for PUT requests to locations path" in this {
+      Put("/locations/1", LocationDto("Plaza toros MADRID", Some("bull2"), 1231231111.22312D, 12312333123.123123D, 200, Some("Leganes space for acts"), Some("www.leganes.es"))) ~> addCredentials(userAdmin) ~> locationOperations ~> check {
+        status mustEqual StatusCodes.OK
+        responseAs[Location] ===  Location(1,"Plaza toros MADRID", Some("bull2"), 1231231111.22312D, 12312333123.123123D, 200, Some("Leganes space for acts"), Some("www.leganes.es"))
       }
     }
 

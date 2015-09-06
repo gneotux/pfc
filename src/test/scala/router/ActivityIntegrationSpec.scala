@@ -64,13 +64,13 @@ class ActivityIntegrationSpec extends Specification with Specs2RouteTest with Ac
       }
     }
 
-    "return the correct activity for PUT requests to activities path" in this {
-      Put("/activities/1",  ActivityDto(1, 2, 5, Some("CONFIRMED,JAVA IS DEAD"), Some("WE DONT NEED JAVA"), Some("Discuss about the future of Scala"), DatabaseSupportSpec.now, DatabaseSupportSpec.now, Some("github/gneotux"))
-      ) ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
-        status mustEqual StatusCodes.Created
-        responseAs[Activity] ===  Activity(1, 1, 2, 5, Some("CONFIRMED,JAVA IS DEAD"), Some("WE DONT NEED JAVA"), Some("Discuss about the future of Scala"), DatabaseSupportSpec.now, DatabaseSupportSpec.now, Some("github/gneotux"))
-      }
-    }
+//    "return the correct activity for PUT requests to activities path" in this {
+//      Put("/activities/1",  ActivityDto(1, 2, 5, Some("CONFIRMED,JAVA IS DEAD"), Some("WE DONT NEED JAVA"), Some("Discuss about the future of Scala"), DatabaseSupportSpec.now, DatabaseSupportSpec.now, Some("github/gneotux"))
+//      ) ~> addCredentials(activityAdmin) ~> activityOperations ~> check {
+//        status mustEqual StatusCodes.OK
+//        responseAs[Activity] ===  Activity(1, 1, 2, 5, Some("CONFIRMED,JAVA IS DEAD"), Some("WE DONT NEED JAVA"), Some("Discuss about the future of Scala"), DatabaseSupportSpec.now, DatabaseSupportSpec.now, Some("github/gneotux"))
+//      }
+//    }.isPending
 
     //    "return not authorized for activity without valid permission for DELETE requests to activities path" in this {
     //      Delete("/activities/1") ~> addCredentials(activityNotAdmin) ~> activityOperations ~> check {

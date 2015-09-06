@@ -77,7 +77,7 @@ trait EventRouter extends HttpService with EventRouterDoc {
           entity(as[EventDto]) { event =>
             respondWithMediaType(`application/json`) {
               onComplete(eventService.update(eventId, event)) {
-                case Success(Some(newEvent)) => complete(Created, newEvent)
+                case Success(Some(newEvent)) => complete(OK, newEvent)
                 case Success(None) => complete(NotAcceptable, "Invalid event")
                 case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
               }

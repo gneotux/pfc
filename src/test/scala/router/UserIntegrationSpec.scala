@@ -64,6 +64,13 @@ class UserIntegrationSpec extends Specification with Specs2RouteTest with UserRo
       }
     }
 
+    "return the correct user for PUT requests to users path" in this {
+      Put("/users/1", UserDto("test6@test.com", Some("name4"), Some("surname4"), None, None, None, "USER", "NEWPASSWORD")) ~> addCredentials(userAdmin) ~> userOperations ~> check {
+        status mustEqual StatusCodes.OK
+        responseAs[User] === User(1, "test6@test.com", Some("name4"), Some("surname4"), None, None, None, "USER", Some(4))
+      }
+    }
+
 //    "return not authorized for user without valid permission for DELETE requests to users path" in this {
 //      Delete("/users/1") ~> addCredentials(userNotAdmin) ~> userOperations ~> check {
 //        status mustEqual StatusCodes.InternalServerError

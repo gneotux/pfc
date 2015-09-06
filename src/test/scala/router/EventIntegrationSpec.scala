@@ -64,6 +64,14 @@ class EventIntegrationSpec extends Specification with Specs2RouteTest with Event
       }
     }
 
+    "return the correct event for PUT requests to events path" in this {
+      Put("/events/1", EventDto("ScalaDays return2", Some("The most third important event in the scala world"), Some("www.scaladaysreturn.com"), Some("#scaladays"), Some("http://scaladays.jpg"))
+      ) ~> addCredentials(userAdmin) ~> eventOperations ~> check {
+        status mustEqual StatusCodes.OK
+        responseAs[Event] ===  Event(1, "ScalaDays return2", Some("The most third important event in the scala world"), Some("www.scaladaysreturn.com"), Some("#scaladays"), Some("http://scaladays.jpg"))
+      }
+    }
+
     //    "return not authorized for event without valid permission for DELETE requests to events path" in this {
     //      Delete("/events/1") ~> addCredentials(userNotAdmin) ~> eventOperations ~> check {
     //        status mustEqual StatusCodes.InternalServerError

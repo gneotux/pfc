@@ -64,6 +64,14 @@ class EventDayIntegrationSpec extends Specification with Specs2RouteTest with Ev
       }
     }
 
+    "return the correct eventDay for PUT requests to eventDays path" in this {
+      Put("/eventdays/1", EventDayDto(1, DatabaseSupportSpec.now, DatabaseSupportSpec.now)
+      ) ~> addCredentials(userAdmin) ~> eventDayOperations ~> check {
+        status mustEqual StatusCodes.OK
+        responseAs[EventDay] ===  EventDay(1, 1, DatabaseSupportSpec.now, DatabaseSupportSpec.now)
+      }
+    }
+
     //    "return not authorized for eventDay without valid permission for DELETE requests to eventDays path" in this {
     //      Delete("/eventdays/1") ~> addCredentials(userNotAdmin) ~> eventDayOperations ~> check {
     //        status mustEqual StatusCodes.InternalServerError
