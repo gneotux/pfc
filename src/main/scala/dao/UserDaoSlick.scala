@@ -56,7 +56,7 @@ trait UserDaoSlickImpl extends UserDao {
   override def get(email: String): DBIO[Option[(User, UserPassword)]] =
     (for {
       user <- users.filter(_.email === email)
-      password <- PasswordDao.passwords.filter(_.id === user.id)
+      password <- PasswordDao.passwords.filter(_.id === user.passwordId)
     } yield (user, password)).result.headOption
 
   override def add(user: User): DBIO[Option[Int]] = {
