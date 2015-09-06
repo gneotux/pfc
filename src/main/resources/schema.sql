@@ -88,6 +88,14 @@ create table "sponsors"
 "event_id" integer NOT NULL
 );
 
+create table "eventdays"
+("id" SERIAL NOT NULL PRIMARY KEY,
+"event_id" integer NOT NULL,
+"start_time" timestamp without time zone NOT NULL,
+"end_time" timestamp without time zone NOT NULL
+);
+
+
 create table "passwords"
 ("id" SERIAL NOT NULL PRIMARY KEY,
 "hashed_password" VARCHAR(254),
