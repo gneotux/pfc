@@ -13,8 +13,8 @@ object DatabaseConfig {
 
   lazy val db: Database = systemUrl.fold[Database](Database.forURL(url, user, password, driver = driver)) {
     uri =>
-
-      val systemUrl: Option[String] = for {
+      
+      val systemUrl: Option[(String, String, String)] = for {
         dbUri <- Option(new URI(uri))
         userInfo = dbUri.getUserInfo().split(":").lift
         user <- userInfo(0)
@@ -22,9 +22,11 @@ object DatabaseConfig {
         host <- Option(dbUri.getHost)
         port <- Option(dbUri.getPort)
         databaseName <- Option(dbUri.getPath)
-      } yield s"jdbc:postgresql://$host:$port$databaseName"
+      } yield (s"jdbc:postgresql://$host:$port$databaseName", user, password)
 
-      Database.forURL(systemUrl.getOrElse(throw new Exception("FAILING GETTING DATABASE_URL")), user, password, driver = driver)
+      val tup = systemUrl.getOrElse(throw new Exception("FAILING GETTING DATABASE_URL"))
+
+      Database.forURL(tup._1, tup._2, tup._3, driver = driver)
   }
   lazy val profile: JdbcProfile = driver match {
     case "org.postgresql.Driver" => PostgresDriver
